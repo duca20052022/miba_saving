@@ -6,249 +6,266 @@
 <title>MIBA – Programma Saving</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f8fafc;color:#1e293b;font-size:13px}
-header{background:#1a2744;color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:50px}
-header h1{font-size:16px;font-weight:700}
-#sync{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.15);color:#86efac}
-nav{background:#fff;border-bottom:2px solid #e2e8f0;display:flex;padding:0 20px;overflow-x:auto}
-nav button{padding:11px 18px;border:none;background:none;font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;font-size:13px}
+header{background:#1a2744;color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:50px;position:sticky;top:0;z-index:50}
+header h1{font-size:15px;font-weight:700}
+#sync{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.15)}
+nav{background:#fff;border-bottom:2px solid #e2e8f0;display:flex;padding:0 16px;overflow-x:auto;position:sticky;top:50px;z-index:40}
+nav button{padding:10px 14px;border:none;background:none;font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:color .15s}
 nav button.active{color:#2563eb;border-bottom-color:#2563eb}
-main{max-width:1100px;margin:0 auto;padding:20px 14px;overflow:visible}
+main{max-width:1200px;margin:0 auto;padding:16px 12px}
 .page{display:none}.page.active{display:block}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.kpi{background:#fff;border-radius:8px;padding:16px;border-left:4px solid #2563eb}
-.kpi.g{border-left-color:#16a34a}.kpi.r{border-left-color:#dc2626}.kpi.y{border-left-color:#d97706}
-.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;margin-bottom:4px}
-.kv{font-size:26px;font-weight:800;color:#1a2744;line-height:1}
-.ks{font-size:10px;color:#94a3b8;margin-top:3px}
-.sec{font-size:13px;font-weight:700;color:#1a2744;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kcard{background:#fff;border-radius:8px;padding:14px;border-left:4px solid #2563eb}
+.kcard.g{border-left-color:#16a34a}.kcard.r{border-left-color:#dc2626}.kcard.y{border-left-color:#d97706}
+.klbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;margin-bottom:3px}
+.kval{font-size:24px;font-weight:800;color:#1a2744;line-height:1}
+.ksub{font-size:10px;color:#94a3b8;margin-top:2px}
+.sec{font-size:13px;font-weight:700;color:#1a2744;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
 .sec::after{content:'';flex:1;height:1px;background:#e2e8f0}
-.card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:16px}
-.toolbar{display:flex;gap:8px;padding:12px;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;align-items:center}
-.toolbar input,.toolbar select{padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc}
-.toolbar input{flex:1;min-width:140px}
-.btn{padding:7px 14px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
-.bp{background:#2563eb;color:#fff}.bp:hover{background:#1d4ed8}
-.bsm{padding:4px 8px;font-size:11px}
-.bg{background:transparent;color:#475569;border:1px solid #e2e8f0}.bg:hover{background:#f1f5f9}
+.panel{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:14px}
+.toolbar{display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid #f1f5f9;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select{padding:6px 9px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;color:#1e293b}
+.toolbar input{flex:1;min-width:120px}
+.btn{padding:6px 14px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.bp{background:#2563eb;color:#fff}
+.bg{background:transparent;color:#475569;border:1px solid #e2e8f0}
 .bd{background:#fee2e2;color:#dc2626;border:none}
+.bsm{padding:3px 8px;font-size:11px}
 table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{background:#1a2744;color:#fff;padding:9px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+thead th{background:#1a2744;color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 tbody tr{border-bottom:1px solid #f1f5f9}
-tbody tr:hover{background:#dbeafe}
-tbody td{padding:9px 10px;vertical-align:middle}
+tbody tr:hover{background:#eff6ff}
+tbody td{padding:8px 10px;vertical-align:middle}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.bg2{background:#dcfce7;color:#16a34a}.by2{background:#fef3c7;color:#d97706}.br2{background:#fee2e2;color:#dc2626}.bb2{background:#dbeafe;color:#2563eb}.bgr2{background:#f1f5f9;color:#475569}
-.pb{background:#e2e8f0;border-radius:4px;height:5px;width:70px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:4px}
-.pf{height:100%;border-radius:4px;background:#2563eb}.pf.done{background:#16a34a}
-.rt{display:inline-block;background:#dbeafe;color:#2563eb;border-radius:12px;padding:2px 7px;font-size:10px;font-weight:600;margin:1px}
-.ag{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:20px}
-.ac{background:#fff;border-radius:8px;padding:14px}
-.ac h3{font-size:12px;font-weight:700;color:#1a2744;margin-bottom:8px}
-.as{display:flex;justify-content:space-between;font-size:11px;color:#475569;padding:3px 0;border-bottom:1px solid #f1f5f9}
-.as:last-child{border-bottom:none}
-.fu{background:#fff;border-radius:8px;padding:16px;margin-bottom:12px;border-left:4px solid #2563eb}
-.fu.r{border-left-color:#dc2626}
-.fum{display:flex;gap:12px;font-size:11px;color:#94a3b8;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.bgg{background:#dcfce7;color:#15803d}.bgy{background:#fef9c3;color:#a16207}.bgr{background:#fee2e2;color:#b91c1c}.bgb{background:#dbeafe;color:#1d4ed8}.bgx{background:#f1f5f9;color:#475569}
+.ptag{display:inline-block;background:#dbeafe;color:#1d4ed8;border-radius:12px;padding:2px 7px;font-size:10px;font-weight:600;margin:1px}
+.pbar{background:#e2e8f0;border-radius:3px;height:5px;width:60px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:4px}
+.pfill{height:100%;border-radius:3px;background:#2563eb}
+.pfill.done{background:#16a34a}
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.acard{background:#fff;border-radius:8px;padding:13px}
+.acard h3{font-size:12px;font-weight:700;color:#1a2744;margin-bottom:7px}
+.arow{display:flex;justify-content:space-between;font-size:11px;color:#475569;padding:2px 0;border-bottom:1px solid #f8fafc}
+.arow:last-child{border-bottom:none}
+.fucard{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;border-left:4px solid #2563eb}
+.fucard.red{border-left-color:#dc2626}
+.fumeta{display:flex;gap:10px;font-size:11px;color:#94a3b8;margin-bottom:8px;flex-wrap:wrap;align-items:center}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:12px}
 .ov.open{display:flex}
 .mod{background:#fff;border-radius:12px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto}
-.mh{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center}
-.mh h2{font-size:14px;font-weight:700;color:#1a2744}
-.mx{background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;line-height:1}
-.mb{padding:14px 20px 20px;display:grid;gap:10px}
-.fg{display:flex;flex-direction:column;gap:4px}
-.fg label{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.3px}
-.fg input,.fg select,.fg textarea{padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;color:#1e293b}
+.mhd{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.mhd h2{font-size:14px;font-weight:700;color:#1a2744}
+.mclose{background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8}
+.mbody{padding:12px 18px 18px;display:grid;gap:9px}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.3px}
+.fg input,.fg select,.fg textarea{padding:7px 9px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;color:#1e293b;background:#fff}
 .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#2563eb}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mf{padding:0 20px 16px;display:flex;gap:8px;justify-content:flex-end}
-.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.ic{background:#fff;border-radius:8px;padding:16px}
-.ii{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
-.ii:last-child{border-bottom:none}
-.empty{text-align:center;padding:32px;color:#94a3b8}
-#toast{position:fixed;bottom:16px;right:16px;background:#1a2744;color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:999;transform:translateY(60px);opacity:0;transition:all .25s;pointer-events:none}
-#toast.show{transform:translateY(0);opacity:1}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mfoot{padding:0 18px 14px;display:flex;gap:8px;justify-content:flex-end}
+.igrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.icard{background:#fff;border-radius:8px;padding:14px}
+.iitem{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f8fafc;font-size:12px}
+.iitem:last-child{border-bottom:none}
+.empty{text-align:center;padding:28px;color:#94a3b8;font-size:12px}
+#toast{position:fixed;bottom:14px;right:14px;background:#1a2744;color:#fff;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:600;z-index:999;opacity:0;transform:translateY(40px);transition:all .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
 #toast.s{background:#16a34a}#toast.e{background:#dc2626}
 </style>
 </head>
 <body>
-
 <header>
   <h1>⚡ MIBA – Programma Saving</h1>
-  <span id="sync">● Locale</span>
+  <span id="sync">⏳ Connessione...</span>
 </header>
-
-<nav id="nav">
-  <button class="active" data-page="dashboard">📊 Dashboard</button>
-  <button data-page="attivita">📋 Attività</button>
-  <button data-page="risorse">👥 Risorse</button>
-  <button data-page="followup">📅 Follow-Up</button>
-  <button data-page="gantt">📅 Gantt</button>
-  <button data-page="milestone">⭐ Milestone</button>
-  <button data-page="imp">⚙️ Impostazioni</button>
+<nav id="mainnav">
+  <button class="active" data-p="dashboard">📊 Dashboard</button>
+  <button data-p="attivita">📋 Attività</button>
+  <button data-p="risorse">👥 Risorse</button>
+  <button data-p="followup">📅 Follow-Up</button>
+  <button data-p="gantt">📅 Gantt</button>
+  <button data-p="milestone">⭐ Milestone</button>
+  <button data-p="imp">⚙️ Impostazioni</button>
 </nav>
-
 <main>
 
-<div id="page-dashboard" class="page active">
-  <div class="kpi-grid" id="kpi"></div>
+<!-- DASHBOARD -->
+<div id="p-dashboard" class="page active">
+  <div class="kgrid" id="kpi"></div>
   <div class="sec">Stato per area</div>
-  <div class="ag" id="ag"></div>
+  <div class="agrid" id="agrid"></div>
   <div class="sec">Attività in ritardo</div>
-  <div class="card"><table><thead><tr><th>Attività</th><th>Area</th><th>Risorse</th><th>Scadenza</th></tr></thead><tbody id="tbl-rit"></tbody></table></div>
+  <div class="panel"><table><thead><tr><th>Attività</th><th>Area</th><th>Risorse</th><th>Scadenza</th></tr></thead><tbody id="t-rit"></tbody></table></div>
 </div>
 
-<div id="page-attivita" class="page">
-  <div class="card">
+<!-- ATTIVITÀ -->
+<div id="p-attivita" class="page">
+  <div class="panel">
     <div class="toolbar">
-      <input type="text" id="s-att" placeholder="🔍 Cerca...">
-      <select id="f-area"><option value="">Tutte le aree</option></select>
-      <select id="f-stato"><option value="">Tutti gli stati</option></select>
-      <select id="f-ris"><option value="">Tutte le risorse</option></select>
-      <button class="btn bp" id="btn-nuova">+ Nuova attività</button>
-      <button class="btn bg" id="btn-export">⬇ Esporta Excel</button>
+      <input id="s-q" placeholder="🔍 Cerca...">
+      <select id="s-area"><option value="">Tutte le aree</option></select>
+      <select id="s-stato"><option value="">Tutti gli stati</option></select>
+      <select id="s-ris"><option value="">Tutte le risorse</option></select>
+      <button class="btn bp" id="b-new">+ Nuova attività</button>
+      <button class="btn bg" id="b-xls">⬇ Excel</button>
     </div>
     <table><thead><tr><th>Area</th><th>Attività</th><th>Risorse</th><th>Stato</th><th>Avanz.</th><th>Scadenza</th><th>Saving</th><th>Note</th><th></th></tr></thead>
-    <tbody id="tbl-att"></tbody></table>
+    <tbody id="t-att"></tbody></table>
   </div>
 </div>
 
-<div id="page-risorse" class="page">
-  <div class="kpi-grid" id="kpi-ris"></div>
+<!-- RISORSE -->
+<div id="p-risorse" class="page">
+  <div class="kgrid" id="kpi-ris"></div>
   <div class="sec">Dettaglio per risorsa</div>
-  <div class="card"><table><thead><tr><th>Risorsa</th><th>Attività</th><th>Completate</th><th>In ritardo</th><th>Ore prev.</th><th>Ore cons.</th><th>Delta</th></tr></thead><tbody id="tbl-ris"></tbody></table></div>
+  <div class="panel"><table><thead><tr><th>Risorsa</th><th>Tot.</th><th>Completate</th><th>In ritardo</th><th>Ore prev.</th><th>Ore cons.</th><th>Delta</th></tr></thead><tbody id="t-ris"></tbody></table></div>
   <div id="ris-det"></div>
 </div>
 
-<div id="page-followup" class="page">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+<!-- FOLLOW-UP -->
+<div id="p-followup" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
     <div class="sec" style="margin:0">Registro follow-up</div>
-    <button class="btn bp" id="btn-fu">+ Nuovo follow-up</button>
+    <button class="btn bp" id="b-fu">+ Nuovo follow-up</button>
   </div>
   <div id="fu-list"></div>
 </div>
 
-<div id="page-imp" class="page">
-  <div class="ig">
-    <div class="ic">
+<!-- GANTT -->
+<div id="p-gantt" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <div class="sec" style="margin:0">Gantt – Roadmap attività</div>
+    <div style="display:flex;gap:10px;font-size:11px;color:#475569;align-items:center;flex-wrap:wrap">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#16a34a;vertical-align:middle;margin-right:3px"></span>Completato</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#2563eb;vertical-align:middle;margin-right:3px"></span>In corso</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#dc2626;vertical-align:middle;margin-right:3px"></span>In ritardo</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#94a3b8;vertical-align:middle;margin-right:3px"></span>Non avviato</span>
+      <span style="color:#2563eb">◆ Milestone</span>
+      <span style="color:#7c3aed">★ Follow-up</span>
+    </div>
+  </div>
+  <div style="overflow-x:scroll;overflow-y:auto;max-height:65vh;border-radius:8px;border:1px solid #e2e8f0;background:#fff">
+    <div id="gantt-inner"></div>
+  </div>
+</div>
+
+<!-- MILESTONE -->
+<div id="p-milestone" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div class="sec" style="margin:0">Milestone</div>
+    <button class="btn bp" id="b-ms">+ Nuova milestone</button>
+  </div>
+  <div class="panel">
+    <table><thead><tr><th>Data</th><th>Descrizione</th><th>Tipo</th><th></th></tr></thead>
+    <tbody id="t-ms"></tbody></table>
+  </div>
+</div>
+
+<!-- IMPOSTAZIONI -->
+<div id="p-imp" class="page">
+  <div class="igrid">
+    <div class="icard">
       <div class="sec" style="margin-top:0">Aree</div>
       <div id="l-aree"></div>
       <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="n-area" placeholder="Nuova area..." style="flex:1;padding:7px 9px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px">
-        <button class="btn bp bsm" id="btn-add-area">+</button>
+        <input id="n-area" placeholder="Nuova area..." style="flex:1;padding:6px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px">
+        <button class="btn bp bsm" id="b-area">+</button>
       </div>
     </div>
-    <div class="ic">
+    <div class="icard">
       <div class="sec" style="margin-top:0">Responsabili</div>
       <div id="l-resp"></div>
       <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="n-resp" placeholder="Nuovo responsabile..." style="flex:1;padding:7px 9px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px">
-        <button class="btn bp bsm" id="btn-add-resp">+</button>
+        <input id="n-resp" placeholder="Nuovo responsabile..." style="flex:1;padding:6px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px">
+        <button class="btn bp bsm" id="b-resp">+</button>
       </div>
     </div>
-    <div class="ic">
+    <div class="icard">
       <div class="sec" style="margin-top:0">Stati</div>
       <div id="l-stati"></div>
     </div>
   </div>
-  <div class="ic" style="margin-top:12px">
+  <div class="icard" style="margin-top:12px">
     <div class="sec" style="margin-top:0">☁️ Connessione cloud</div>
-    <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
-      <span style="font-size:20px">✅</span>
-      <div>
-        <div style="font-size:13px;font-weight:700;color:#16a34a">Cloud attivo</div>
-        <div style="font-size:11px;color:#475569;margin-top:2px">Dati sincronizzati automaticamente tra tutti i membri del team.</div>
-      </div>
-    </div>
-    <input type="hidden" id="cfg-key">
-    <input type="hidden" id="cfg-bin">
-    <button style="display:none" id="btn-sync"></button>
+    <div style="padding:10px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:12px;color:#15803d;font-weight:700">✅ Cloud attivo – dati sincronizzati automaticamente</div>
+    <input type="hidden" id="cfg-k">
+    <input type="hidden" id="cfg-b">
+    <button style="display:none" id="b-sync"></button>
   </div>
 </div>
 
-
-<div id="page-gantt" class="page">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-    <div class="sec" style="margin:0">Gantt – Roadmap attività</div>
-    <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:#475569">
-      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#16a34a;vertical-align:middle"></span>Completato
-      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#2563eb;vertical-align:middle"></span>In corso
-      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#dc2626;vertical-align:middle"></span>In ritardo
-      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#94a3b8;vertical-align:middle"></span>Non avviato
-      
-    </div>
-  </div>
-  <div id="gantt-outer" style="overflow-x:scroll;overflow-y:auto;max-height:70vh;border-radius:8px;-webkit-overflow-scrolling:touch;width:100%">
-    <div id="gantt-wrap" style="min-width:1400px;width:1400px"></div>
-  </div>
-</div>
-
-<div id="page-milestone" class="page">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div class="sec" style="margin:0">Milestone</div>
-    <button class="btn bp" id="btn-ms">+ Nuova milestone</button>
-  </div>
-  <div class="card">
-    <table><thead><tr><th>Data</th><th>Descrizione</th><th>Tipo</th><th></th></tr></thead>
-    <tbody id="tbl-ms"></tbody></table>
-  </div>
-</div>
 </main>
 
 <!-- MODAL ATTIVITÀ -->
 <div class="ov" id="m-att">
   <div class="mod">
-    <div class="mh"><h2 id="m-title">Nuova attività</h2><button class="mx" id="btn-close-att">×</button></div>
-    <div class="mb">
+    <div class="mhd"><h2 id="m-title">Nuova attività</h2><button class="mclose" id="mc-att">×</button></div>
+    <div class="mbody">
       <input type="hidden" id="a-id">
-      <div class="fg"><label>Attività *</label><input type="text" id="a-nome" placeholder="Descrizione..."></div>
-      <div class="fr">
+      <div class="fg"><label>Attività *</label><input id="a-nome" placeholder="Descrizione..."></div>
+      <div class="frow">
         <div class="fg"><label>Area</label><select id="a-area"></select></div>
-        <div class="fg"><label>Tema</label><input type="text" id="a-tema" placeholder="es. PSU riduzione ore"></div>
+        <div class="fg"><label>Tema</label><input id="a-tema" placeholder="es. PSU riduzione ore"></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Risorsa 1</label><select id="a-r1"></select></div>
         <div class="fg"><label>Risorsa 2</label><select id="a-r2"></select></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Ore prev. R1</label><input type="number" id="a-op1" value="0" min="0" step="0.5"></div>
         <div class="fg"><label>Ore cons. R1</label><input type="number" id="a-oc1" value="0" min="0" step="0.5"></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Ore prev. R2</label><input type="number" id="a-op2" value="0" min="0" step="0.5"></div>
         <div class="fg"><label>Ore cons. R2</label><input type="number" id="a-oc2" value="0" min="0" step="0.5"></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Stato</label><select id="a-stato"></select></div>
         <div class="fg"><label>Priorità</label><select id="a-prio"><option>Alta</option><option selected>Media</option><option>Bassa</option></select></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Data inizio</label><input type="date" id="a-ini"></div>
         <div class="fg"><label>Scadenza</label><input type="date" id="a-sca"></div>
       </div>
-      <div class="fr">
+      <div class="frow">
         <div class="fg"><label>Saving atteso (€)</label><input type="number" id="a-sav" value="0" min="0"></div>
         <div class="fg"><label>% Avanzamento</label><input type="number" id="a-avz" value="0" min="0" max="100"></div>
       </div>
       <div class="fg"><label>Note</label><textarea id="a-note" rows="2" placeholder="Note..."></textarea></div>
     </div>
-    <div class="mf">
-      <button class="btn bg" id="btn-ann-att">Annulla</button>
-      <button class="btn bp" id="btn-salva-att">Salva</button>
+    <div class="mfoot"><button class="btn bg" id="mc2-att">Annulla</button><button class="btn bp" id="ms-att">Salva</button></div>
+  </div>
+</div>
+
+<!-- MODAL FOLLOW-UP -->
+<div class="ov" id="m-fu">
+  <div class="mod">
+    <div class="mhd"><h2>Nuovo follow-up</h2><button class="mclose" id="mc-fu">×</button></div>
+    <div class="mbody">
+      <div class="frow">
+        <div class="fg"><label>Data riunione</label><input type="date" id="f-data"></div>
+        <div class="fg"><label>N° riunione</label><input id="f-num" placeholder="#1"></div>
+      </div>
+      <div class="fg"><label>Partecipanti</label><input id="f-part" placeholder="Mattia, Fabio, Christian..."></div>
+      <div class="fg"><label>Decisioni prese</label><textarea id="f-dec" rows="3" placeholder="Elenca le decisioni..."></textarea></div>
+      <div class="fg"><label>Prossime azioni</label><textarea id="f-az" rows="3" placeholder="Chi fa cosa entro quando..."></textarea></div>
+      <div class="fg"><label>Rischi / Punti aperti</label><textarea id="f-ris" rows="2" placeholder="Criticità, blocchi..."></textarea></div>
+      <div class="fg"><label>Data prossimo follow-up</label><input type="date" id="f-pros"></div>
     </div>
+    <div class="mfoot"><button class="btn bg" id="mc2-fu">Annulla</button><button class="btn bp" id="ms-fu">Salva</button></div>
   </div>
 </div>
 
 <!-- MODAL MILESTONE -->
 <div class="ov" id="m-ms">
   <div class="mod" style="max-width:400px">
-    <div class="mh"><h2 id="ms-title">Nuova milestone</h2><button class="mx" id="btn-close-ms">×</button></div>
-    <div class="mb">
+    <div class="mhd"><h2 id="ms-title">Nuova milestone</h2><button class="mclose" id="mc-ms">×</button></div>
+    <div class="mbody">
       <input type="hidden" id="ms-id">
       <div class="fg"><label>Data *</label><input type="date" id="ms-data"></div>
-      <div class="fg"><label>Descrizione *</label><input type="text" id="ms-desc" placeholder="es. Revisione progetto con cliente..."></div>
+      <div class="fg"><label>Descrizione *</label><input id="ms-desc" placeholder="es. Revisione con cliente..."></div>
       <div class="fg"><label>Tipo</label>
         <select id="ms-tipo">
           <option value="interno">🔵 Interno</option>
@@ -256,44 +273,21 @@ tbody td{padding:9px 10px;vertical-align:middle}
         </select>
       </div>
     </div>
-    <div class="mf">
-      <button class="btn bg" id="btn-ann-ms">Annulla</button>
-      <button class="btn bp" id="btn-salva-ms">Salva</button>
-    </div>
-  </div>
-</div>
-<!-- MODAL FOLLOW-UP -->
-<div class="ov" id="m-fu">
-  <div class="mod">
-    <div class="mh"><h2>Nuovo follow-up</h2><button class="mx" id="btn-close-fu">×</button></div>
-    <div class="mb">
-      <div class="fr">
-        <div class="fg"><label>Data riunione</label><input type="date" id="f-data"></div>
-        <div class="fg"><label>N° riunione</label><input type="text" id="f-num" placeholder="#1"></div>
-      </div>
-      <div class="fg"><label>Partecipanti</label><input type="text" id="f-part" placeholder="Mattia, Fabio, Christian..."></div>
-      <div class="fg"><label>Decisioni prese</label><textarea id="f-dec" rows="3" placeholder="Elenca le decisioni..."></textarea></div>
-      <div class="fg"><label>Prossime azioni</label><textarea id="f-az" rows="3" placeholder="Chi fa cosa entro quando..."></textarea></div>
-      <div class="fg"><label>Rischi / Punti aperti</label><textarea id="f-ris" rows="2" placeholder="Criticità, blocchi..."></textarea></div>
-      <div class="fg"><label>Data prossimo follow-up</label><input type="date" id="f-pros"></div>
-    </div>
-    <div class="mf">
-      <button class="btn bg" id="btn-ann-fu">Annulla</button>
-      <button class="btn bp" id="btn-salva-fu">Salva</button>
-    </div>
+    <div class="mfoot"><button class="btn bg" id="mc2-ms">Annulla</button><button class="btn bp" id="mss-ms">Salva</button></div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-const AREA_COLS = ['#2563eb','#16a34a','#d97706','#7c3aed','#dc2626','#0891b2'];
+// ── CONFIG ────────────────────────────────────────────────
+const API_KEY = '$2a$10$Fx64kZOa018OP5JjNZZVWubS7mBGv1rO4zns8HbpjNFRxcneZRM4i';
+const BIN_ID  = '6a3f87dada38895dfe068237';
+const ACOLS   = ['#2563eb','#16a34a','#d97706','#7c3aed','#dc2626','#0891b2','#0f766e','#9333ea'];
 
-// ── STATE ──────────────────────────────────────────────────
-let S = JSON.parse(localStorage.getItem('miba_state') || 'null') || {
-  attivita: [],
-  followup: [],
-  milestone: [],
+// ── STATE ─────────────────────────────────────────────────
+let S = {
+  attivita: [], followup: [], milestone: [],
   imp: {
     aree: ['1. Prodotto','2. Industrializzazione','3. Ufficio Tecnico','4. Produzione','5. Supply Chain','6. Pianificazione'],
     responsabili: ['Fabio','Christian','Paolo','Stefano','Mattia','Giuseppe'],
@@ -301,151 +295,138 @@ let S = JSON.parse(localStorage.getItem('miba_state') || 'null') || {
   }
 };
 
-let cfg = {
-  key: localStorage.getItem('miba_key') || '$2a$10$Fx64kZOa018OP5JjNZZVWubS7mBGv1rO4zns8HbpjNFRxcneZRM4i',
-  bin: localStorage.getItem('miba_bin') || '6a3f87dada38895dfe068237'
-};
-
-function persist() {
-  localStorage.setItem('miba_state', JSON.stringify(S));
+// ── CLOUD ─────────────────────────────────────────────────
+function setSy(t, ok) {
+  const el = document.getElementById('sync');
+  el.textContent = t;
+  el.style.color = ok === true ? '#86efac' : ok === false ? '#fca5a5' : '#fff';
 }
 
-// ── NAV ───────────────────────────────────────────────────
-document.getElementById('nav').addEventListener('click', function(e) {
-  const btn = e.target.closest('button[data-page]');
-  if (!btn) return;
-  const id = btn.dataset.page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  btn.classList.add('active');
-  if (id === 'dashboard') rDash();
-  if (id === 'attivita') { fillSels(); rAtt(); }
-  if (id === 'risorse') rRis();
-  if (id === 'followup') rFu();
-  if (id === 'imp') rImp();
-  if (id === 'gantt') rGantt();
-  if (id === 'milestone') rMs();
-});
-
-// ── CLOUD ─────────────────────────────────────────────────
-async function syncCloud() {
-  cfg.key = document.getElementById('cfg-key').value.trim();
-  cfg.bin = document.getElementById('cfg-bin').value.trim();
-  localStorage.setItem('miba_key', cfg.key);
-  localStorage.setItem('miba_bin', cfg.bin);
-  if (!cfg.key) { toast('Inserisci la API key', 'e'); return; }
-  setSy('Connessione...');
-  if (!cfg.bin) {
-    try {
-      const r = await fetch('https://api.jsonbin.io/v3/b', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','X-Master-Key':cfg.key,'X-Bin-Name':'MIBA-Saving','X-Bin-Private':'false'},
-        body: JSON.stringify(S)
-      });
-      const d = await r.json();
-      cfg.bin = d.metadata.id;
-      localStorage.setItem('miba_bin', cfg.bin);
-      document.getElementById('cfg-bin').value = cfg.bin;
-      setSy('✓ Cloud attivo');
-      toast('Bin creato! ID: ' + cfg.bin, 's');
-    } catch { setSy('● Locale'); toast('Errore connessione', 'e'); }
-  } else {
-    try {
-      const r = await fetch('https://api.jsonbin.io/v3/b/' + cfg.bin + '/latest', {headers:{'X-Master-Key':cfg.key}});
-      const d = await r.json();
-      S = {...S, ...d.record};
-      persist();
-      setSy('✓ Cloud attivo');
-      toast('Connesso al cloud ✓', 's');
-      rDash();
-    } catch { setSy('● Locale'); toast('Errore: controlla API key e Bin ID', 'e'); }
+async function cloudLoad() {
+  setSy('⏳ Connessione...');
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID + '/latest', {
+      headers: { 'X-Master-Key': API_KEY }
+    });
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    if (d.record) {
+      // Merge preservando struttura
+      S.attivita  = d.record.attivita  || [];
+      S.followup  = d.record.followup  || [];
+      S.milestone = d.record.milestone || [];
+      if (d.record.imp) {
+        S.imp.aree         = d.record.imp.aree         || S.imp.aree;
+        S.imp.responsabili = d.record.imp.responsabili || S.imp.responsabili;
+        S.imp.stati        = d.record.imp.stati        || S.imp.stati;
+      }
+    }
+    setSy('✓ Sincronizzato', true);
+    renderAll();
+  } catch {
+    setSy('⚠ Offline – dati locali', false);
+    const local = localStorage.getItem('miba_bk');
+    if (local) try { const d = JSON.parse(local); S.attivita=d.attivita||[]; S.followup=d.followup||[]; S.milestone=d.milestone||[]; if(d.imp)S.imp=d.imp; } catch {}
+    renderAll();
   }
 }
 
-async function saveCloud() {
-  if (!cfg.key || !cfg.bin) return;
+async function cloudSave() {
+  localStorage.setItem('miba_bk', JSON.stringify(S));
   try {
-    await fetch('https://api.jsonbin.io/v3/b/' + cfg.bin, {
+    const r = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID, {
       method: 'PUT',
-      headers: {'Content-Type':'application/json','X-Master-Key':cfg.key},
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
       body: JSON.stringify(S)
     });
-  } catch {}
+    if (!r.ok) throw 0;
+    setSy('✓ Salvato', true);
+    toast('Salvato ✓', 's');
+  } catch {
+    setSy('⚠ Salvataggio fallito', false);
+    toast('Salvato in locale (cloud non raggiungibile)', 's');
+  }
 }
 
-function setSy(t) { document.getElementById('sync').textContent = t; }
+function save() { cloudSave(); }
 
-function save() {
-  persist();
-  saveCloud();
-}
+// ── NAV ───────────────────────────────────────────────────
+document.getElementById('mainnav').addEventListener('click', e => {
+  const b = e.target.closest('button[data-p]');
+  if (!b) return;
+  const p = b.dataset.p;
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('#mainnav button').forEach(x => x.classList.remove('active'));
+  document.getElementById('p-' + p).classList.add('active');
+  b.classList.add('active');
+  const fns = { dashboard: rDash, attivita: () => { fillSels(); rAtt(); }, risorse: rRis, followup: rFu, gantt: rGantt, milestone: rMs, imp: rImp };
+  if (fns[p]) fns[p]();
+});
 
-// ── RENDER ────────────────────────────────────────────────
-function rAll() { rDash(); fillSels(); rAtt(); rImp(); }
+function renderAll() { rDash(); fillSels(); rAtt(); rImp(); }
 
+// ── DASHBOARD ─────────────────────────────────────────────
 function rDash() {
-  const a = S.attivita, tot = a.length;
+  const a = S.attivita, n = a.length;
   const done = a.filter(x => x.stato === '🟢 Completato').length;
-  const rit = a.filter(x => x.stato === '🔴 In ritardo').length;
-  const sav = a.reduce((s, x) => s + (+x.sav || 0), 0);
-  const pct = tot ? Math.round(done / tot * 100) : 0;
+  const rit  = a.filter(x => x.stato === '🔴 In ritardo').length;
+  const sav  = a.reduce((s, x) => s + (+x.sav || 0), 0);
+  const pct  = n ? Math.round(done / n * 100) : 0;
   document.getElementById('kpi').innerHTML = `
-    <div class="kpi"><div class="kl">Totale attività</div><div class="kv">${tot}</div></div>
-    <div class="kpi g"><div class="kl">Completate</div><div class="kv">${done}</div><div class="ks">${pct}%</div></div>
-    <div class="kpi r"><div class="kl">In ritardo</div><div class="kv">${rit}</div></div>
-    <div class="kpi y"><div class="kl">Saving atteso</div><div class="kv">€${sav.toLocaleString('it-IT')}</div></div>`;
-  const ag = document.getElementById('ag');
-  ag.innerHTML = '';
+    <div class="kcard"><div class="klbl">Totale attività</div><div class="kval">${n}</div></div>
+    <div class="kcard g"><div class="klbl">Completate</div><div class="kval">${done}</div><div class="ksub">${pct}%</div></div>
+    <div class="kcard r"><div class="klbl">In ritardo</div><div class="kval">${rit}</div></div>
+    <div class="kcard y"><div class="klbl">Saving atteso</div><div class="kval">€${sav.toLocaleString('it-IT')}</div></div>`;
+  const ag = document.getElementById('agrid'); ag.innerHTML = '';
   S.imp.aree.forEach((area, i) => {
-    const items = a.filter(x => x.area === area);
-    if (!items.length) return;
-    const col = AREA_COLS[i % AREA_COLS.length];
-    ag.innerHTML += `<div class="ac" style="border-top:3px solid ${col}">
+    const items = a.filter(x => x.area === area); if (!items.length) return;
+    const col = ACOLS[i % ACOLS.length];
+    ag.innerHTML += `<div class="acard" style="border-top:3px solid ${col}">
       <h3><span style="color:${col}">●</span> ${area}</h3>
-      <div class="as"><span>Totale</span><strong>${items.length}</strong></div>
-      <div class="as"><span>Completate</span><strong style="color:#16a34a">${items.filter(x=>x.stato==='🟢 Completato').length}</strong></div>
-      <div class="as"><span>In ritardo</span><strong style="color:#dc2626">${items.filter(x=>x.stato==='🔴 In ritardo').length}</strong></div>
-      <div class="as"><span>Saving</span><strong>€${items.reduce((s,x)=>s+(+x.sav||0),0).toLocaleString('it-IT')}</strong></div>
+      <div class="arow"><span>Totale</span><strong>${items.length}</strong></div>
+      <div class="arow"><span>Completate</span><strong style="color:#16a34a">${items.filter(x=>x.stato==='🟢 Completato').length}</strong></div>
+      <div class="arow"><span>In ritardo</span><strong style="color:#dc2626">${items.filter(x=>x.stato==='🔴 In ritardo').length}</strong></div>
+      <div class="arow"><span>Saving</span><strong>€${items.reduce((s,x)=>s+(+x.sav||0),0).toLocaleString('it-IT')}</strong></div>
     </div>`;
   });
   const inRit = a.filter(x => x.stato === '🔴 In ritardo');
-  document.getElementById('tbl-rit').innerHTML = inRit.length
-    ? inRit.map(x => `<tr><td>${x.nome}</td><td><span class="badge bb2">${x.area}</span></td><td>${[x.r1,x.r2].filter(Boolean).map(r=>`<span class="rt">${r}</span>`).join('')}</td><td>${x.sca?fmtD(x.sca):'—'}</td></tr>`).join('')
+  document.getElementById('t-rit').innerHTML = inRit.length
+    ? inRit.map(x => `<tr><td>${x.nome}</td><td><span class="badge bgb">${x.area}</span></td><td>${[x.r1,x.r2].filter(Boolean).map(r=>`<span class="ptag">${r}</span>`).join('')}</td><td>${x.sca ? fmtD(x.sca) : '—'}</td></tr>`).join('')
     : `<tr><td colspan="4"><div class="empty">✅ Nessuna attività in ritardo</div></td></tr>`;
 }
 
+// ── ATTIVITÀ ──────────────────────────────────────────────
 function fillSels() {
-  const sets = {
-    'f-area': {pre:'<option value="">Tutte le aree</option>', list:'aree'},
-    'a-area': {pre:'', list:'aree'},
-    'f-stato': {pre:'<option value="">Tutti gli stati</option>', list:'stati'},
-    'a-stato': {pre:'', list:'stati'},
-    'f-ris': {pre:'<option value="">Tutte le risorse</option>', list:'responsabili'},
-    'a-r1': {pre:'<option value="">— nessuna —</option>', list:'responsabili'},
-    'a-r2': {pre:'<option value="">— nessuna —</option>', list:'responsabili'},
+  const defs = {
+    's-area':  { pre: '<option value="">Tutte le aree</option>',     k: 'aree' },
+    'a-area':  { pre: '',                                             k: 'aree' },
+    's-stato': { pre: '<option value="">Tutti gli stati</option>',    k: 'stati' },
+    'a-stato': { pre: '',                                             k: 'stati' },
+    's-ris':   { pre: '<option value="">Tutte le risorse</option>',   k: 'responsabili' },
+    'a-r1':    { pre: '<option value="">— nessuna —</option>',        k: 'responsabili' },
+    'a-r2':    { pre: '<option value="">— nessuna —</option>',        k: 'responsabili' },
   };
-  Object.entries(sets).forEach(([id, {pre, list}]) => {
+  Object.entries(defs).forEach(([id, { pre, k }]) => {
     const el = document.getElementById(id); if (!el) return;
     const cur = el.value;
-    el.innerHTML = pre + S.imp[list].map(v => `<option value="${v}">${v}</option>`).join('');
+    el.innerHTML = pre + S.imp[k].map(v => `<option value="${v}">${v}</option>`).join('');
     if (cur) el.value = cur;
   });
 }
 
-function sb(s) {
-  if (!s) return 'bgr2';
-  if (s.includes('Completato')) return 'bg2';
-  if (s.includes('ritardo')) return 'br2';
-  if (s.includes('corso')) return 'by2';
-  return 'bgr2';
+function sbadge(s) {
+  if (!s) return 'bgx';
+  if (s.includes('Completato')) return 'bgg';
+  if (s.includes('ritardo'))    return 'bgr';
+  if (s.includes('corso'))      return 'bgy';
+  return 'bgx';
 }
 
 function rAtt() {
-  const q = (document.getElementById('s-att').value || '').toLowerCase();
-  const fa = document.getElementById('f-area').value;
-  const fs = document.getElementById('f-stato').value;
-  const fr = document.getElementById('f-ris').value;
+  const q  = (document.getElementById('s-q').value || '').toLowerCase();
+  const fa = document.getElementById('s-area').value;
+  const fs = document.getElementById('s-stato').value;
+  const fr = document.getElementById('s-ris').value;
   const list = S.attivita.filter(a => {
     if (fa && a.area !== fa) return false;
     if (fs && a.stato !== fs) return false;
@@ -453,230 +434,252 @@ function rAtt() {
     if (q && !a.nome.toLowerCase().includes(q) && !(a.area||'').toLowerCase().includes(q)) return false;
     return true;
   });
-  document.getElementById('tbl-att').innerHTML = list.length
+  document.getElementById('t-att').innerHTML = list.length
     ? list.map(a => {
         const pct = +a.avz || 0;
         return `<tr>
-          <td><span class="badge bb2" style="font-size:10px">${a.area}</span></td>
-          <td>${a.nome}${a.tema?`<br><span style="font-size:10px;color:#94a3b8">${a.tema}</span>`:''}</td>
-          <td>${[a.r1,a.r2].filter(Boolean).map(r=>`<span class="rt">${r}</span>`).join('')||'—'}</td>
-          <td><span class="badge ${sb(a.stato)}">${a.stato||'—'}</span></td>
-          <td><div class="pb"><div class="pf ${pct===100?'done':''}" style="width:${pct}%"></div></div>${pct}%</td>
-          <td>${a.sca?fmtD(a.sca):'—'}</td>
-          <td>${a.sav?'€'+(+a.sav).toLocaleString('it-IT'):'—'}</td>
-          <td style="max-width:200px;color:#475569">${a.note ? `<span title="${a.note}" style="cursor:help;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.note}</span>` : '—'}</td>
-          <td>
-            <button class="btn bg bsm edit-btn" data-id="${a.id}">✏️</button>
-            <button class="btn bd bsm del-btn" data-id="${a.id}">🗑</button>
+          <td><span class="badge bgb" style="font-size:10px">${a.area}</span></td>
+          <td>${a.nome}${a.tema ? `<br><span style="font-size:10px;color:#94a3b8">${a.tema}</span>` : ''}</td>
+          <td>${[a.r1,a.r2].filter(Boolean).map(r=>`<span class="ptag">${r}</span>`).join('') || '—'}</td>
+          <td><span class="badge ${sbadge(a.stato)}">${a.stato || '—'}</span></td>
+          <td><div class="pbar"><div class="pfill ${pct===100?'done':''}" style="width:${pct}%"></div></div>${pct}%</td>
+          <td style="white-space:nowrap">${a.sca ? fmtD(a.sca) : '—'}</td>
+          <td>${a.sav ? '€' + (+a.sav).toLocaleString('it-IT') : '—'}</td>
+          <td style="max-width:160px;color:#475569">${a.note ? `<span title="${a.note}" style="cursor:help;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">${a.note}</span>` : '—'}</td>
+          <td style="white-space:nowrap">
+            <button class="btn bg bsm ea" data-id="${a.id}">✏️</button>
+            <button class="btn bd bsm da" data-id="${a.id}">🗑</button>
           </td>
         </tr>`;
       }).join('')
-    : `<tr><td colspan="8"><div class="empty">📋 Nessuna attività. Clicca "+ Nuova attività".</div></td></tr>`;
+    : `<tr><td colspan="9"><div class="empty">📋 Nessuna attività. Clicca "+ Nuova attività".</div></td></tr>`;
 }
 
+// ── RISORSE ───────────────────────────────────────────────
 function rRis() {
   const data = S.imp.responsabili.map(r => {
     const mine = S.attivita.filter(a => a.r1 === r || a.r2 === r);
-    const op = mine.reduce((s,a) => s + (a.r1===r?(+a.op1||0):0) + (a.r2===r?(+a.op2||0):0), 0);
-    const oc = mine.reduce((s,a) => s + (a.r1===r?(+a.oc1||0):0) + (a.r2===r?(+a.oc2||0):0), 0);
-    return {nome:r, tot:mine.length, done:mine.filter(a=>a.stato==='🟢 Completato').length, rit:mine.filter(a=>a.stato==='🔴 In ritardo').length, op, oc, delta:oc-op, att:mine};
+    const op = mine.reduce((s, a) => s + (a.r1===r?(+a.op1||0):0) + (a.r2===r?(+a.op2||0):0), 0);
+    const oc = mine.reduce((s, a) => s + (a.r1===r?(+a.oc1||0):0) + (a.r2===r?(+a.oc2||0):0), 0);
+    return { nome: r, tot: mine.length, done: mine.filter(a=>a.stato==='🟢 Completato').length, rit: mine.filter(a=>a.stato==='🔴 In ritardo').length, op, oc, delta: oc-op, att: mine };
   }).filter(r => r.tot > 0);
-
   document.getElementById('kpi-ris').innerHTML = data.map(r =>
-    `<div class="kpi ${r.rit>0?'r':''}"><div class="kl">${r.nome}</div><div class="kv">${r.tot}</div><div class="ks">${r.done} completate · ${r.rit} in ritardo</div></div>`
+    `<div class="kcard ${r.rit>0?'r':''}"><div class="klbl">${r.nome}</div><div class="kval">${r.tot}</div><div class="ksub">${r.done} completate · ${r.rit} in ritardo</div></div>`
   ).join('');
-
-  document.getElementById('tbl-ris').innerHTML = data.map(r =>
+  document.getElementById('t-ris').innerHTML = data.map(r =>
     `<tr><td><strong>${r.nome}</strong></td><td style="text-align:center">${r.tot}</td><td style="text-align:center;color:#16a34a"><strong>${r.done}</strong></td><td style="text-align:center;color:#dc2626">${r.rit}</td><td style="text-align:center">${r.op.toFixed(1)}h</td><td style="text-align:center">${r.oc.toFixed(1)}h</td><td style="text-align:center;color:${r.delta>0?'#dc2626':'#16a34a'};font-weight:700">${r.delta>0?'+':''}${r.delta.toFixed(1)}h</td></tr>`
   ).join('') || `<tr><td colspan="7"><div class="empty">Nessuna risorsa assegnata</div></td></tr>`;
-
   document.getElementById('ris-det').innerHTML = data.map(r => `
-    <div class="sec" style="margin-top:16px">${r.nome}</div>
-    <div class="card"><table>
+    <div class="sec" style="margin-top:14px">${r.nome}</div>
+    <div class="panel"><table>
       <thead><tr><th>Attività</th><th>Area</th><th>Stato</th><th>Ore prev.</th><th>Ore cons.</th></tr></thead>
       <tbody>${r.att.map(a => `<tr>
-        <td>${a.nome}</td>
-        <td><span class="badge bb2" style="font-size:10px">${a.area}</span></td>
-        <td><span class="badge ${sb(a.stato)}">${a.stato||'—'}</span></td>
+        <td>${a.nome}</td><td><span class="badge bgb" style="font-size:10px">${a.area}</span></td>
+        <td><span class="badge ${sbadge(a.stato)}">${a.stato||'—'}</span></td>
         <td style="text-align:center">${((a.r1===r.nome?(+a.op1||0):0)+(a.r2===r.nome?(+a.op2||0):0)).toFixed(1)}h</td>
         <td style="text-align:center">${((a.r1===r.nome?(+a.oc1||0):0)+(a.r2===r.nome?(+a.oc2||0):0)).toFixed(1)}h</td>
       </tr>`).join('')}</tbody>
     </table></div>`).join('');
 }
 
+// ── FOLLOW-UP ─────────────────────────────────────────────
 function rFu() {
   const fu = [...(S.followup||[])].reverse();
   document.getElementById('fu-list').innerHTML = fu.length
-    ? fu.map(f => `<div class="fu ${f.ris?'r':''}">
-        <div class="fum">
+    ? fu.map(f => `<div class="fucard ${f.ris?'red':''}">
+        <div class="fumeta">
           <strong>${f.num||''}</strong>
           <span>📅 ${fmtD(f.data)}</span>
           <span>👥 ${f.part||'—'}</span>
-          ${f.pros?`<span>⏭ ${fmtD(f.pros)}</span>`:''}
-          <button class="btn bd bsm del-fu-btn" data-id="${f.id}" style="margin-left:auto">🗑</button>
+          ${f.pros ? `<span>⏭ ${fmtD(f.pros)}</span>` : ''}
+          <button class="btn bd bsm dfu" data-id="${f.id}" style="margin-left:auto">🗑</button>
         </div>
-        ${f.dec?`<div style="margin-bottom:8px"><strong style="font-size:11px;color:#1a2744">✅ Decisioni</strong><p style="font-size:12px;margin-top:3px;white-space:pre-wrap">${f.dec}</p></div>`:''}
-        ${f.az?`<div style="margin-bottom:8px"><strong style="font-size:11px;color:#2563eb">▶ Azioni</strong><p style="font-size:12px;margin-top:3px;white-space:pre-wrap">${f.az}</p></div>`:''}
-        ${f.ris?`<div><strong style="font-size:11px;color:#dc2626">⚠ Rischi</strong><p style="font-size:12px;margin-top:3px;white-space:pre-wrap">${f.ris}</p></div>`:''}
+        ${f.dec ? `<div style="margin-bottom:7px"><strong style="font-size:11px;color:#1a2744">✅ Decisioni</strong><p style="font-size:12px;margin-top:2px;white-space:pre-wrap">${f.dec}</p></div>` : ''}
+        ${f.az  ? `<div style="margin-bottom:7px"><strong style="font-size:11px;color:#2563eb">▶ Azioni</strong><p style="font-size:12px;margin-top:2px;white-space:pre-wrap">${f.az}</p></div>` : ''}
+        ${f.ris ? `<div><strong style="font-size:11px;color:#dc2626">⚠ Rischi</strong><p style="font-size:12px;margin-top:2px;white-space:pre-wrap">${f.ris}</p></div>` : ''}
       </div>`).join('')
-    : `<div class="empty" style="background:#fff;border-radius:8px;padding:36px">📅 Nessun follow-up. Clicca "+ Nuovo follow-up".</div>`;
+    : `<div class="empty" style="background:#fff;border-radius:8px;padding:32px">📅 Nessun follow-up. Clicca "+ Nuovo follow-up".</div>`;
 }
 
-function rImp() {
-  ['aree','responsabili','stati'].forEach(k => {
-    const elId = {aree:'l-aree',responsabili:'l-resp',stati:'l-stati'}[k];
-    document.getElementById(elId).innerHTML = S.imp[k].map((v,i) => `
-      <div class="ii"><span>${v}</span>${k!=='stati'?`<button class="btn bd bsm rm-imp" data-key="${k}" data-i="${i}">×</button>`:''}</div>`).join('');
-  });
-  document.getElementById('cfg-key').value = cfg.key;
-  document.getElementById('cfg-bin').value = cfg.bin;
-}
-
-// ── EVENTI CON DELEGATION ─────────────────────────────────
-document.body.addEventListener('click', function(e) {
-  // Edit attività
-  const eb = e.target.closest('.edit-btn');
-  if (eb) { editAtt(eb.dataset.id); return; }
-  // Delete attività
-  const db = e.target.closest('.del-btn');
-  if (db) { delAtt(db.dataset.id); return; }
-  // Delete follow-up
-  const df = e.target.closest('.del-fu-btn');
-  if (df) { delFu(df.dataset.id); return; }
-  // Edit milestone
-  const em = e.target.closest('.edit-ms');
-  if (em) { openMs(S.milestone.find(m=>m.id===em.dataset.id)); return; }
-  // Del milestone
-  const dm = e.target.closest('.del-ms');
-  if (dm) { delMs(dm.dataset.id); return; }
-  // Remove impostazione
-  const ri = e.target.closest('.rm-imp');
-  if (ri) { rmImp(ri.dataset.key, +ri.dataset.i); return; }
-});
-
-document.getElementById('btn-nuova').onclick = () => openAtt();
-document.getElementById('btn-close-att').onclick = () => document.getElementById('m-att').classList.remove('open');
-document.getElementById('btn-ann-att').onclick = () => document.getElementById('m-att').classList.remove('open');
-document.getElementById('btn-salva-att').onclick = saveAtt;
-
-document.getElementById('btn-fu').onclick = () => openFu();
-document.getElementById('btn-close-fu').onclick = () => document.getElementById('m-fu').classList.remove('open');
-document.getElementById('btn-ann-fu').onclick = () => document.getElementById('m-fu').classList.remove('open');
-document.getElementById('btn-salva-fu').onclick = saveFu;
-
-document.getElementById('btn-export').onclick = exportExcel;
-document.getElementById('btn-ms').onclick = () => openMs();
-document.getElementById('btn-close-ms').onclick = () => document.getElementById('m-ms').classList.remove('open');
-document.getElementById('btn-ann-ms').onclick = () => document.getElementById('m-ms').classList.remove('open');
-document.getElementById('btn-salva-ms').onclick = saveMs;
-document.getElementById('btn-add-area').onclick = () => addImp('aree','n-area');
-document.getElementById('btn-add-resp').onclick = () => addImp('responsabili','n-resp');
-document.getElementById('btn-sync').onclick = syncCloud;
-
-document.getElementById('s-att').oninput = rAtt;
-document.getElementById('f-area').onchange = rAtt;
-document.getElementById('f-stato').onchange = rAtt;
-document.getElementById('f-ris').onchange = rAtt;
-
-// ── ATTIVITÀ ──────────────────────────────────────────────
-function openAtt(a = null) {
-  fillSels();
-  document.getElementById('m-title').textContent = a ? 'Modifica attività' : 'Nuova attività';
-  document.getElementById('a-id').value   = a?.id   || '';
-  document.getElementById('a-nome').value = a?.nome  || '';
-  document.getElementById('a-tema').value = a?.tema  || '';
-  document.getElementById('a-ini').value  = a?.ini   || '';
-  document.getElementById('a-sca').value  = a?.sca   || '';
-  document.getElementById('a-sav').value  = a?.sav   || 0;
-  document.getElementById('a-avz').value  = a?.avz   || 0;
-  document.getElementById('a-note').value = a?.note  || '';
-  document.getElementById('a-op1').value  = a?.op1   || 0;
-  document.getElementById('a-oc1').value  = a?.oc1   || 0;
-  document.getElementById('a-op2').value  = a?.op2   || 0;
-  document.getElementById('a-oc2').value  = a?.oc2   || 0;
-  if (a) {
-    document.getElementById('a-area').value  = a.area  || '';
-    document.getElementById('a-stato').value = a.stato || '';
-    document.getElementById('a-prio').value  = a.prio  || 'Media';
-    document.getElementById('a-r1').value    = a.r1    || '';
-    document.getElementById('a-r2').value    = a.r2    || '';
+// ── GANTT ─────────────────────────────────────────────────
+function rGantt() {
+  const wrap = document.getElementById('gantt-inner');
+  const att = S.attivita;
+  if (!att.length) {
+    wrap.innerHTML = '<div class="empty" style="padding:32px">📅 Nessuna attività. Aggiungile nel tab Attività.</div>';
+    return;
   }
-  document.getElementById('m-att').classList.add('open');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const minD = new Date(today); minD.setDate(today.getDate() - 7);
+  const maxD = new Date(today); maxD.setDate(today.getDate() + 56);
+  const totalMs = maxD - minD;
+  const pct = d => Math.max(0, Math.min(100, (new Date(d) - minD) / totalMs * 100));
+  const wPct = (s, e) => Math.max(0.3, Math.min(100 - pct(s), (new Date(e) - new Date(s)) / totalMs * 100));
+  const fmtW = d => d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
+  const fmtS = d => { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); } catch { return ''; }};
+  const bCol = s => { if(!s)return'#94a3b8';if(s.includes('Completato'))return'#16a34a';if(s.includes('ritardo'))return'#dc2626';if(s.includes('corso'))return'#2563eb';return'#94a3b8';};
+  const COL_W = 180;
+  const weeks = [];
+  let wd = new Date(minD);
+  while (wd <= maxD) { weeks.push(new Date(wd)); wd.setDate(wd.getDate()+7); }
+  const hdr = `<div style="display:flex;background:#1a2744;position:sticky;top:0;z-index:10;min-width:${COL_W + weeks.length*100}px">
+    <div style="width:${COL_W}px;min-width:${COL_W}px;padding:8px 10px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;border-right:1px solid rgba(255,255,255,0.15)">Attività / Risorsa</div>
+    <div style="flex:1;display:flex">
+      ${weeks.map(w=>`<div style="flex:1;min-width:100px;font-size:9px;color:#94a3b8;text-align:center;padding:8px 0;border-left:1px solid rgba(255,255,255,0.1)">${fmtW(w)}</div>`).join('')}
+    </div>
+  </div>`;
+  const rows = att.map(a => {
+    const ini = a.ini || today.toISOString().split('T')[0];
+    const sca = a.sca || new Date(today.getTime()+30*864e5).toISOString().split('T')[0];
+    const col = bCol(a.stato);
+    const l   = pct(ini);
+    const w   = wPct(ini, sca);
+    const avz = Math.min(100, +a.avz || 0);
+    return `<div style="display:flex;align-items:center;border-bottom:1px solid #f1f5f9;min-width:${COL_W+weeks.length*100}px">
+      <div style="width:${COL_W}px;min-width:${COL_W}px;padding:7px 10px;font-size:11px;border-right:1px solid #e2e8f0">
+        <div style="font-weight:600;color:#1a2744;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${a.nome}">${a.nome}</div>
+        <div style="font-size:10px;color:#94a3b8">${[a.r1,a.r2].filter(Boolean).join(', ')||'—'}</div>
+      </div>
+      <div style="flex:1;position:relative;height:38px;background:#f8fafc">
+        <div style="position:absolute;left:${l}%;width:${w}%;top:9px;height:18px;background:${col};border-radius:4px;opacity:0.25;min-width:4px"></div>
+        <div style="position:absolute;left:${l}%;width:${w*avz/100}%;top:9px;height:18px;background:${col};border-radius:4px"></div>
+        <div style="position:absolute;left:calc(${l}% + 4px);top:11px;font-size:9px;color:#1e293b;font-weight:600;white-space:nowrap;pointer-events:none">${fmtS(ini)} → ${fmtS(sca)}${avz>0?' ('+avz+'%)':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  // Milestone + follow-up nella timeline
+  const events = [
+    ...(S.milestone||[]).map(m => ({ data: m.data, label: m.desc, tipo: m.tipo === 'cliente' ? 'ms-c' : 'ms-i' })),
+    ...(S.followup||[]).filter(f => f.data).map(f => ({ data: f.data, label: 'Follow-up ' + (f.num||''), tipo: 'fu' }))
+  ].sort((a,b) => a.data.localeCompare(b.data));
+  const evRows = events.map(ev => {
+    const l = pct(ev.data);
+    if (l < 0 || l > 100) return '';
+    const col  = ev.tipo==='fu' ? '#7c3aed' : ev.tipo==='ms-c' ? '#ea580c' : '#2563eb';
+    const bg   = ev.tipo==='fu' ? '#f5f3ff' : ev.tipo==='ms-c' ? '#fff7ed' : '#eff6ff';
+    const icon = ev.tipo==='fu' ? '★' : '◆';
+    return `<div style="display:flex;align-items:center;border-bottom:1px solid ${bg};background:${bg};min-width:${COL_W+weeks.length*100}px">
+      <div style="width:${COL_W}px;min-width:${COL_W}px;padding:5px 10px;font-size:10px;font-weight:700;color:${col};border-right:1px solid #e2e8f0">${icon} ${ev.label}</div>
+      <div style="flex:1;position:relative;height:26px">
+        <div style="position:absolute;left:calc(${l}% - 6px);top:3px;width:12px;height:12px;background:${col};transform:rotate(45deg);border-radius:2px"></div>
+        <div style="position:absolute;left:calc(${l}% + 9px);top:5px;font-size:9px;color:${col};font-weight:700;white-space:nowrap">${fmtS(ev.data)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  const todayL = pct(today);
+  wrap.innerHTML = hdr + `<div style="position:relative">${rows}${evRows}
+    <div style="position:absolute;top:0;bottom:0;left:calc(${COL_W}px + ${todayL}% * (100% - ${COL_W}px) / 100);width:2px;background:rgba(220,38,38,0.6);pointer-events:none;z-index:5">
+      <div style="position:absolute;top:2px;left:3px;font-size:9px;color:#dc2626;font-weight:700;background:#fff;padding:1px 3px;border-radius:3px;white-space:nowrap">oggi</div>
+    </div>
+  </div>`;
 }
-
-function saveAtt() {
-  const nome = document.getElementById('a-nome').value.trim();
-  if (!nome) { toast('Inserisci il nome', 'e'); return; }
-  const id = document.getElementById('a-id').value;
-  const obj = {
-    id: id || 'A'+Date.now(),
-    nome, area: document.getElementById('a-area').value,
-    tema: document.getElementById('a-tema').value,
-    r1: document.getElementById('a-r1').value,
-    r2: document.getElementById('a-r2').value,
-    op1: +document.getElementById('a-op1').value||0,
-    oc1: +document.getElementById('a-oc1').value||0,
-    op2: +document.getElementById('a-op2').value||0,
-    oc2: +document.getElementById('a-oc2').value||0,
-    stato: document.getElementById('a-stato').value,
-    prio: document.getElementById('a-prio').value,
-    ini: document.getElementById('a-ini').value,
-    sca: document.getElementById('a-sca').value,
-    sav: +document.getElementById('a-sav').value||0,
-    avz: +document.getElementById('a-avz').value||0,
-    note: document.getElementById('a-note').value,
-  };
-  if (id) { const i = S.attivita.findIndex(a => a.id===id); if(i>=0) S.attivita[i]=obj; }
-  else S.attivita.push(obj);
-  document.getElementById('m-att').classList.remove('open');
-  rAll(); save();
-}
-
-function editAtt(id) { openAtt(S.attivita.find(a => a.id===id)); }
-function delAtt(id) { if(!confirm('Eliminare?')) return; S.attivita=S.attivita.filter(a=>a.id!==id); rAll(); save(); }
-
-// ── FOLLOW-UP ─────────────────────────────────────────────
-function openFu() {
-  document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('f-num').value  = '#'+((S.followup||[]).length+1);
-  ['f-part','f-dec','f-az','f-ris','f-pros'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('m-fu').classList.add('open');
-}
-function saveFu() {
-  if (!S.followup) S.followup=[];
-  S.followup.push({id:'FU'+Date.now(), data:document.getElementById('f-data').value, num:document.getElementById('f-num').value, part:document.getElementById('f-part').value, dec:document.getElementById('f-dec').value, az:document.getElementById('f-az').value, ris:document.getElementById('f-ris').value, pros:document.getElementById('f-pros').value});
-  document.getElementById('m-fu').classList.remove('open');
-  rFu(); save();
-}
-function delFu(id) { if(!confirm('Eliminare?')) return; S.followup=S.followup.filter(f=>f.id!==id); rFu(); save(); }
-
-// ── IMPOSTAZIONI ──────────────────────────────────────────
-function addImp(key,inputId) {
-  const val = document.getElementById(inputId).value.trim(); if(!val) return;
-  S.imp[key].push(val); document.getElementById(inputId).value='';
-  rImp(); fillSels(); save();
-}
-function rmImp(key,i) { S.imp[key].splice(i,1); rImp(); fillSels(); save(); }
-
-
 
 // ── MILESTONE ─────────────────────────────────────────────
 function rMs() {
-  const ms = (S.milestone||[]).sort((a,b) => a.data.localeCompare(b.data));
-  document.getElementById('tbl-ms').innerHTML = ms.length
+  const ms = [...(S.milestone||[])].sort((a,b) => a.data.localeCompare(b.data));
+  document.getElementById('t-ms').innerHTML = ms.length
     ? ms.map(m => `<tr>
         <td style="white-space:nowrap">${fmtD(m.data)}</td>
         <td>${m.desc}</td>
         <td><span class="badge" style="background:${m.tipo==='cliente'?'#fff7ed':'#eff6ff'};color:${m.tipo==='cliente'?'#ea580c':'#2563eb'}">${m.tipo==='cliente'?'🟠 Cliente':'🔵 Interno'}</span></td>
         <td>
-          <button class="btn bg bsm edit-ms" data-id="${m.id}">✏️</button>
-          <button class="btn bd bsm del-ms" data-id="${m.id}">🗑</button>
+          <button class="btn bg bsm ems" data-id="${m.id}">✏️</button>
+          <button class="btn bd bsm dms" data-id="${m.id}">🗑</button>
         </td>
       </tr>`).join('')
     : `<tr><td colspan="4"><div class="empty">Nessuna milestone. Clicca "+ Nuova milestone".</div></td></tr>`;
 }
 
-function openMs(m=null) {
+// ── IMPOSTAZIONI ──────────────────────────────────────────
+function rImp() {
+  const render = (elId, key) => {
+    document.getElementById(elId).innerHTML = S.imp[key].map((v, i) =>
+      `<div class="iitem"><span>${v}</span>${key!=='stati'?`<button class="btn bd bsm rmi" data-key="${key}" data-i="${i}">×</button>`:''}</div>`
+    ).join('');
+  };
+  render('l-aree','aree'); render('l-resp','responsabili'); render('l-stati','stati');
+}
+
+// ── EVENTI ────────────────────────────────────────────────
+document.body.addEventListener('click', e => {
+  const t = (cls) => e.target.closest('.' + cls);
+  // Attività
+  if (t('ea')) { openAtt(S.attivita.find(a => a.id === t('ea').dataset.id)); return; }
+  if (t('da')) { if(confirm('Eliminare?')){ S.attivita=S.attivita.filter(a=>a.id!==t('da').dataset.id); renderAll(); save(); } return; }
+  // Follow-up
+  if (t('dfu')) { if(confirm('Eliminare?')){ S.followup=S.followup.filter(f=>f.id!==t('dfu').dataset.id); rFu(); save(); } return; }
+  // Milestone
+  if (t('ems')) { openMs(S.milestone.find(m=>m.id===t('ems').dataset.id)); return; }
+  if (t('dms')) { if(confirm('Eliminare?')){ S.milestone=S.milestone.filter(m=>m.id!==t('dms').dataset.id); rMs(); save(); } return; }
+  // Impostazioni
+  if (t('rmi')) { const el=t('rmi'); S.imp[el.dataset.key].splice(+el.dataset.i,1); rImp(); fillSels(); save(); return; }
+});
+
+// Bottoni fissi
+document.getElementById('b-new').onclick = () => openAtt();
+document.getElementById('mc-att').onclick = () => closeModal('m-att');
+document.getElementById('mc2-att').onclick = () => closeModal('m-att');
+document.getElementById('ms-att').onclick = saveAtt;
+document.getElementById('b-fu').onclick = () => openFu();
+document.getElementById('mc-fu').onclick = () => closeModal('m-fu');
+document.getElementById('mc2-fu').onclick = () => closeModal('m-fu');
+document.getElementById('ms-fu').onclick = saveFu;
+document.getElementById('b-ms').onclick = () => openMs();
+document.getElementById('mc-ms').onclick = () => closeModal('m-ms');
+document.getElementById('mc2-ms').onclick = () => closeModal('m-ms');
+document.getElementById('mss-ms').onclick = saveMs;
+document.getElementById('b-area').onclick = () => addImp('aree','n-area');
+document.getElementById('b-resp').onclick = () => addImp('responsabili','n-resp');
+document.getElementById('b-xls').onclick = exportXls;
+document.getElementById('s-q').oninput = rAtt;
+document.getElementById('s-area').onchange = rAtt;
+document.getElementById('s-stato').onchange = rAtt;
+document.getElementById('s-ris').onchange = rAtt;
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── MODAL ATTIVITÀ ────────────────────────────────────────
+function openAtt(a = null) {
+  fillSels();
+  document.getElementById('m-title').textContent = a ? 'Modifica attività' : 'Nuova attività';
+  const set = (id, v) => { const el=document.getElementById(id); if(el)el.value=v||''; };
+  set('a-id', a?.id); set('a-nome', a?.nome); set('a-tema', a?.tema);
+  set('a-ini', a?.ini); set('a-sca', a?.sca);
+  set('a-sav', a?.sav||0); set('a-avz', a?.avz||0); set('a-note', a?.note);
+  set('a-op1', a?.op1||0); set('a-oc1', a?.oc1||0);
+  set('a-op2', a?.op2||0); set('a-oc2', a?.oc2||0);
+  if (a) { set('a-area',a.area); set('a-stato',a.stato); set('a-prio',a.prio||'Media'); set('a-r1',a.r1); set('a-r2',a.r2); }
+  document.getElementById('m-att').classList.add('open');
+}
+function saveAtt() {
+  const nome = document.getElementById('a-nome').value.trim();
+  if (!nome) { toast('Inserisci il nome', 'e'); return; }
+  const g = id => document.getElementById(id).value;
+  const id = g('a-id');
+  const obj = { id: id||'A'+Date.now(), nome, area:g('a-area'), tema:g('a-tema'), r1:g('a-r1'), r2:g('a-r2'),
+    op1:+g('a-op1')||0, oc1:+g('a-oc1')||0, op2:+g('a-op2')||0, oc2:+g('a-oc2')||0,
+    stato:g('a-stato'), prio:g('a-prio'), ini:g('a-ini'), sca:g('a-sca'),
+    sav:+g('a-sav')||0, avz:+g('a-avz')||0, note:g('a-note') };
+  if (id) { const i=S.attivita.findIndex(a=>a.id===id); if(i>=0)S.attivita[i]=obj; } else S.attivita.push(obj);
+  closeModal('m-att'); renderAll(); save();
+}
+
+// ── MODAL FOLLOW-UP ───────────────────────────────────────
+function openFu() {
+  document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-num').value = '#' + ((S.followup||[]).length + 1);
+  ['f-part','f-dec','f-az','f-ris','f-pros'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m-fu').classList.add('open');
+}
+function saveFu() {
+  const g = id => document.getElementById(id).value;
+  if (!S.followup) S.followup = [];
+  S.followup.push({ id:'FU'+Date.now(), data:g('f-data'), num:g('f-num'), part:g('f-part'), dec:g('f-dec'), az:g('f-az'), ris:g('f-ris'), pros:g('f-pros') });
+  closeModal('m-fu'); rFu(); save();
+}
+
+// ── MODAL MILESTONE ───────────────────────────────────────
+function openMs(m = null) {
   document.getElementById('ms-title').textContent = m ? 'Modifica milestone' : 'Nuova milestone';
   document.getElementById('ms-id').value   = m?.id   || '';
   document.getElementById('ms-data').value = m?.data  || '';
@@ -684,256 +687,65 @@ function openMs(m=null) {
   document.getElementById('ms-tipo').value = m?.tipo  || 'interno';
   document.getElementById('m-ms').classList.add('open');
 }
-
 function saveMs() {
   const data = document.getElementById('ms-data').value;
   const desc = document.getElementById('ms-desc').value.trim();
-  if (!data || !desc) { toast('Inserisci data e descrizione','e'); return; }
+  if (!data || !desc) { toast('Inserisci data e descrizione', 'e'); return; }
   if (!S.milestone) S.milestone = [];
   const id = document.getElementById('ms-id').value;
   const obj = { id: id||'MS'+Date.now(), data, desc, tipo: document.getElementById('ms-tipo').value };
-  if (id) { const i = S.milestone.findIndex(m=>m.id===id); if(i>=0) S.milestone[i]=obj; }
-  else S.milestone.push(obj);
-  document.getElementById('m-ms').classList.remove('open');
-  rMs(); save();
+  if (id) { const i=S.milestone.findIndex(m=>m.id===id); if(i>=0)S.milestone[i]=obj; } else S.milestone.push(obj);
+  closeModal('m-ms'); rMs(); save();
 }
 
-function delMs(id) {
-  if (!confirm('Eliminare?')) return;
-  S.milestone = S.milestone.filter(m=>m.id!==id);
-  rMs(); save();
+// ── IMPOSTAZIONI ──────────────────────────────────────────
+function addImp(key, inputId) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+  S.imp[key].push(val);
+  document.getElementById(inputId).value = '';
+  rImp(); fillSels(); save();
 }
 
-// ── GANTT ─────────────────────────────────────────────────
-function rGantt() {
-  const wrap = document.getElementById('gantt-wrap');
-  const att = S.attivita;
-
-  if (!att.length) {
-    wrap.innerHTML = '<div class="empty" style="background:#fff;border-radius:8px;padding:36px">📅 Nessuna attività. Aggiungile nel tab Attività.</div>';
-    return;
-  }
-
-  // Finestra fissa: oggi - 1 settimana → oggi + 7 settimane (~ 2 mesi)
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const minD = new Date(today); minD.setDate(today.getDate() - 7);
-  const maxD = new Date(today); maxD.setDate(today.getDate() + 49); // 7 settimane avanti
-  const totalDays = (maxD - minD) / 86400000;
-
-  const pct  = d => { const dt = d instanceof Date ? d : new Date(d); return Math.max(0, Math.min(100, (dt - minD) / 86400000 / totalDays * 100)); };
-  const wPct = (s, e) => Math.max(0.5, Math.min(100 - pct(s), (new Date(e) - new Date(s)) / 86400000 / totalDays * 100));
-  const fmtW = d => d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
-  const fmtS = d => { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); } catch { return ''; } };
-
-  const barColor = s => {
-    if (!s) return '#94a3b8';
-    if (s.includes('Completato')) return '#16a34a';
-    if (s.includes('ritardo'))    return '#dc2626';
-    if (s.includes('corso'))      return '#2563eb';
-    return '#94a3b8';
+// ── EXPORT EXCEL ──────────────────────────────────────────
+function exportXls() {
+  const now = new Date().toLocaleDateString('it-IT');
+  const esc = v => String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const sheet = (name, hdrs, rows) => {
+    let x = `<Worksheet ss:Name="${esc(name)}"><Table>`;
+    x += '<Row>' + hdrs.map(h=>`<Cell ss:StyleID="h"><Data ss:Type="String">${esc(h)}</Data></Cell>`).join('') + '</Row>';
+    rows.forEach((r,ri) => { x += `<Row ss:StyleID="${ri%2?'o':'e'}">` + r.map(v=>`<Cell><Data ss:Type="${typeof v==='number'?'Number':'String'}">${esc(v)}</Data></Cell>`).join('') + '</Row>'; });
+    return x + '</Table></Worksheet>';
   };
-
-  // Settimane header
-  const weeks = [];
-  let wd = new Date(minD);
-  while (wd <= maxD) { weeks.push(new Date(wd)); wd.setDate(wd.getDate()+7); }
-
-  const hdr = weeks.map(w =>
-    `<div style="flex:1;font-size:9px;color:#94a3b8;text-align:center;padding:2px 0;border-left:1px solid rgba(255,255,255,0.15);white-space:nowrap">${fmtW(w)}</div>`
-  ).join('');
-
-  // Righe attività
-  const rows = att.map(a => {
-    const iniD = a.ini || today.toISOString().split('T')[0];
-    const scaD = a.sca || new Date(today.getTime()+30*86400000).toISOString().split('T')[0];
-    const col  = barColor(a.stato);
-    const left = pct(iniD);
-    const w    = wPct(iniD, scaD);
-    const avz  = Math.min(100, +a.avz || 0);
-    return `<div style="display:flex;align-items:center;border-bottom:1px solid #f1f5f9">
-      <div style="width:200px;min-width:200px;padding:7px 10px;font-size:11px;border-right:1px solid #e2e8f0">
-        <div style="font-weight:600;color:#1a2744;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.nome}">${a.nome}</div>
-        <div style="font-size:10px;color:#94a3b8">${[a.r1,a.r2].filter(Boolean).join(', ')||'—'}</div>
-      </div>
-      <div style="flex:1;position:relative;height:38px;background:#f8fafc">
-        <div style="position:absolute;left:${left}%;width:${w}%;top:9px;height:20px;background:${col};border-radius:4px;opacity:0.3;min-width:4px"></div>
-        <div style="position:absolute;left:${left}%;width:${w*avz/100}%;top:9px;height:20px;background:${col};border-radius:4px;min-width:0"></div>
-        <div style="position:absolute;left:calc(${left}% + 4px);top:11px;font-size:9px;color:#1a2744;white-space:nowrap;pointer-events:none;font-weight:600">${fmtS(iniD)} → ${fmtS(scaD)} ${avz>0?'('+avz+'%)':''}</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Milestone dai follow-up reali
-  // Milestone con rombo ◆ e follow-up con stella ★ sul Gantt
-  const msRows = [
-    ...(S.milestone||[]).map(m => ({...m, _tipo: 'milestone'})),
-    ...(S.followup||[]).filter(f => f.data).map(f => ({id:f.id, data:f.data, desc:'Follow-up '+( f.num||''), tipo:'followup', _tipo:'followup'}))
-  ].sort((a,b)=>a.data.localeCompare(b.data)).map(item => {
-    const itemDate = new Date(item.data); itemDate.setHours(0,0,0,0);
-    const left = pct(itemDate);
-    if (left < 0 || left > 100) return '';
-    const isFollowup = item._tipo === 'followup';
-    const isCliente = item.tipo === 'cliente';
-    const col  = isFollowup ? '#7c3aed' : (isCliente ? '#ea580c' : '#2563eb');
-    const line = isFollowup ? '#a78bfa' : (isCliente ? '#fb923c' : '#60a5fa');
-    const bg   = isFollowup ? '#f5f3ff' : (isCliente ? '#fff7ed' : '#eff6ff');
-    const icon = isFollowup ? '★' : '◆';
-    const label = isFollowup ? item.desc : item.desc;
-    return \`<div style="display:flex;align-items:center;border-bottom:1px solid \${bg};background:\${bg}">
-      <div style="width:200px;min-width:200px;padding:5px 10px;font-size:10px;font-weight:700;color:\${col};border-right:1px solid #e2e8f0">\${icon} \${label}</div>
-      <div style="flex:1;position:relative;height:26px">
-        <div style="position:absolute;left:calc(\${left}% - 7px);top:3px;width:14px;height:14px;background:\${col};transform:rotate(45deg);border-radius:2px;opacity:0.9"></div>
-        <div style="position:absolute;left:calc(\${left}% + 10px);top:5px;font-size:9px;color:\${col};font-weight:700;white-space:nowrap">\${fmtS(item.data)}</div>
-      </div>
-    </div>\`;
-  }).join('');
-
-  // Linea oggi
-  const todayPct = pct(today);
-
-  wrap.innerHTML = `
-    <div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);min-width:800px">
-      <div style="background:#1a2744;display:flex;position:sticky;top:0;z-index:10">
-        <div style="width:200px;min-width:200px;padding:9px 10px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,0.15)">Attività / Risorsa</div>
-        <div style="flex:1;display:flex;padding:9px 0">${hdr}</div>
-      </div>
-      <div style="position:relative">
-        ${rows}
-        ${msRows}
-        <div style="position:absolute;top:0;bottom:0;left:calc(200px + ${todayPct * (1 - 200/800)}%);width:2px;background:rgba(239,68,68,0.7);pointer-events:none;z-index:5">
-          <div style="position:absolute;top:2px;left:4px;font-size:9px;color:#dc2626;font-weight:700;background:#fff;padding:1px 3px;border-radius:3px">oggi</div>
-        </div>
-      </div>
-    </div>`;
+  const wb = `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles>
+  <Style ss:ID="h"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#1A2744" ss:Pattern="Solid"/></Style>
+  <Style ss:ID="e"><Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/></Style>
+  <Style ss:ID="o"><Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/></Style>
+</Styles>
+${sheet('Attività',['ID','Area','Tema','Attività','R1','R2','Op1','Oc1','Op2','Oc2','Stato','Priorità','Inizio','Scadenza','Saving €','Avanz %','Note'],
+  S.attivita.map(a=>[a.id,a.area,a.tema,a.nome,a.r1,a.r2,a.op1||0,a.oc1||0,a.op2||0,a.oc2||0,a.stato,a.prio,a.ini,a.sca,a.sav||0,a.avz||0,a.note]))}
+${sheet('Risorse',['Risorsa','Tot','Completate','In ritardo','Ore prev','Ore cons','Delta'],
+  S.imp.responsabili.map(r=>{const m=S.attivita.filter(a=>a.r1===r||a.r2===r);const op=m.reduce((s,a)=>s+(a.r1===r?(+a.op1||0):0)+(a.r2===r?(+a.op2||0):0),0);const oc=m.reduce((s,a)=>s+(a.r1===r?(+a.oc1||0):0)+(a.r2===r?(+a.oc2||0):0),0);return[r,m.length,m.filter(a=>a.stato==='🟢 Completato').length,m.filter(a=>a.stato==='🔴 In ritardo').length,op.toFixed(1),oc.toFixed(1),(oc-op).toFixed(1)];}).filter(r=>r[1]>0))}
+${sheet('Follow-Up',['N°','Data','Partecipanti','Decisioni','Azioni','Rischi','Prossimo'],
+  (S.followup||[]).map(f=>[f.num,f.data,f.part,f.dec,f.az,f.ris,f.pros]))}
+${sheet('Milestone',['Data','Descrizione','Tipo'],
+  (S.milestone||[]).map(m=>[m.data,m.desc,m.tipo]))}
+</Workbook>`;
+  const a = document.createElement('a');
+  a.href = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(wb);
+  a.download = 'MIBA_Saving_' + now.replace(/\//g,'-') + '.xls';
+  a.click();
+  toast('Export completato ✓', 's');
 }
 
 // ── UTILS ─────────────────────────────────────────────────
 function fmtD(d) { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}); } catch { return d||'—'; } }
-function toast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='show '+type; setTimeout(()=>t.className='',3000); }
-
-
-// ── EXPORT EXCEL ──────────────────────────────────────────
-function exportExcel() {
-  const now = new Date().toLocaleDateString('it-IT');
-
-  // ── Foglio 1: Attività
-  const attHeaders = ['ID','Area','Tema','Attività','Risorsa 1','Risorsa 2','Ore Prev R1','Ore Cons R1','Ore Prev R2','Ore Cons R2','Stato','Priorità','Data Inizio','Scadenza','Saving (€)','% Avanzamento','Note'];
-  const attRows = S.attivita.map(a => [
-    a.id, a.area||'', a.tema||'', a.nome||'',
-    a.r1||'', a.r2||'',
-    a.op1||0, a.oc1||0, a.op2||0, a.oc2||0,
-    a.stato||'', a.prio||'',
-    a.ini||'', a.sca||'',
-    a.sav||0, a.avz||0, a.note||''
-  ]);
-
-  // ── Foglio 2: Risorse
-  const risHeaders = ['Risorsa','Attività Totali','Completate','In Corso','In Ritardo','Ore Previste','Ore Consuntivate','Delta Ore'];
-  const risRows = S.imp.responsabili.map(r => {
-    const mine = S.attivita.filter(a => a.r1===r || a.r2===r);
-    const op = mine.reduce((s,a) => s+(a.r1===r?(+a.op1||0):0)+(a.r2===r?(+a.op2||0):0), 0);
-    const oc = mine.reduce((s,a) => s+(a.r1===r?(+a.oc1||0):0)+(a.r2===r?(+a.oc2||0):0), 0);
-    return [r, mine.length,
-      mine.filter(a=>a.stato==='🟢 Completato').length,
-      mine.filter(a=>a.stato==='🟡 In corso').length,
-      mine.filter(a=>a.stato==='🔴 In ritardo').length,
-      op.toFixed(1), oc.toFixed(1), (oc-op).toFixed(1)];
-  }).filter(r => r[1] > 0);
-
-  // ── Foglio 3: Follow-Up
-  const fuHeaders = ['N°','Data','Partecipanti','Decisioni','Azioni','Rischi','Prossimo Follow-Up'];
-  const fuRows = (S.followup||[]).map(f => [
-    f.num||'', f.data||'', f.part||'',
-    f.dec||'', f.az||'', f.ris||'', f.pros||''
-  ]);
-
-  // ── Foglio 4: Dashboard KPI
-  const tot = S.attivita.length;
-  const done = S.attivita.filter(a=>a.stato==='🟢 Completato').length;
-  const rit = S.attivita.filter(a=>a.stato==='🔴 In ritardo').length;
-  const sav = S.attivita.reduce((s,a)=>s+(+a.sav||0),0);
-  const kpiHeaders = ['KPI','Valore'];
-  const kpiRows = [
-    ['Totale attività', tot],
-    ['Completate', done],
-    ['In ritardo', rit],
-    ['% completamento', tot ? Math.round(done/tot*100)+'%' : '0%'],
-    ['Saving atteso (€)', sav],
-    ['Data estrazione', now],
-  ];
-
-  // ── Genera XML Excel (formato SpreadsheetML)
-  const esc = v => String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-
-  const makeSheet = (name, headers, rows) => {
-    let xml = `<Worksheet ss:Name="${esc(name)}"><Table>`;
-    // Header row
-    xml += '<Row>';
-    headers.forEach(h => {
-      xml += `<Cell ss:StyleID="header"><Data ss:Type="String">${esc(h)}</Data></Cell>`;
-    });
-    xml += '</Row>';
-    // Data rows
-    rows.forEach((row, ri) => {
-      xml += `<Row ss:StyleID="${ri%2===0?'even':'odd'}">`;
-      row.forEach(v => {
-        const isNum = typeof v === 'number' || (!isNaN(v) && v !== '' && !String(v).includes('%') && !String(v).includes('/'));
-        xml += `<Cell><Data ss:Type="${isNum?'Number':'String'}">${esc(v)}</Data></Cell>`;
-      });
-      xml += '</Row>';
-    });
-    xml += '</Table></Worksheet>';
-    return xml;
-  };
-
-  const workbook = `<?xml version="1.0" encoding="UTF-8"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
-  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
-  xmlns:x="urn:schemas-microsoft-com:office:excel">
-  <Styles>
-    <Style ss:ID="header">
-      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="10"/>
-      <Interior ss:Color="#1A2744" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
-      <Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/></Borders>
-    </Style>
-    <Style ss:ID="even">
-      <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>
-      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
-    </Style>
-    <Style ss:ID="odd">
-      <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
-    </Style>
-  </Styles>
-  ${makeSheet('Attività', attHeaders, attRows)}
-  ${makeSheet('Risorse', risHeaders, risRows)}
-  ${makeSheet('Follow-Up', fuHeaders, fuRows)}
-  ${makeSheet('Dashboard KPI', kpiHeaders, kpiRows)}
-</Workbook>`;
-
-  const blob = new Blob([workbook], {type:'application/vnd.ms-excel;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `MIBA_Saving_${now.replace(/\//g,'-')}.xls`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Export completato ✓','s');
-}
+function toast(msg, type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='show '+(type||''); setTimeout(()=>t.className='',3000); }
 
 // ── INIT ──────────────────────────────────────────────────
-rDash();
-fillSels();
-if (cfg.key && cfg.bin) {
-  setSy('Connessione...');
-  fetch('https://api.jsonbin.io/v3/b/' + cfg.bin + '/latest', {headers:{'X-Master-Key':cfg.key}})
-    .then(r => r.json())
-    .then(d => { S = {...S, ...d.record}; persist(); setSy('✓ Cloud attivo'); rAll(); })
-    .catch(() => setSy('● Locale'));
-}
+cloudLoad();
 </script>
 </body>
 </html>
