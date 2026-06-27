@@ -13,7 +13,7 @@ header h1{font-size:16px;font-weight:700}
 nav{background:#fff;border-bottom:2px solid #e2e8f0;display:flex;padding:0 20px;overflow-x:auto}
 nav button{padding:11px 18px;border:none;background:none;font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
 nav button.active{color:#2563eb;border-bottom-color:#2563eb}
-main{max-width:1100px;margin:0 auto;padding:20px 14px}
+main{max-width:1100px;margin:0 auto;padding:20px 14px;overflow:visible}
 .page{display:none}.page.active{display:block}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 .kpi{background:#fff;border-radius:8px;padding:16px;border-left:4px solid #2563eb}
@@ -86,6 +86,7 @@ tbody td{padding:9px 10px;vertical-align:middle}
   <button data-page="risorse">👥 Risorse</button>
   <button data-page="followup">📅 Follow-Up</button>
   <button data-page="gantt">📅 Gantt</button>
+  <button data-page="milestone">⭐ Milestone</button>
   <button data-page="imp">⚙️ Impostazioni</button>
 </nav>
 
@@ -176,11 +177,22 @@ tbody td{padding:9px 10px;vertical-align:middle}
       <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#2563eb;vertical-align:middle"></span>In corso
       <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#dc2626;vertical-align:middle"></span>In ritardo
       <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#94a3b8;vertical-align:middle"></span>Non avviato
-      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#fbbf24;vertical-align:middle"></span>Milestone
+      
     </div>
   </div>
-  <div style="overflow-x:auto">
-    <div id="gantt-wrap"></div>
+  <div style="overflow-x:auto;overflow-y:auto;max-height:70vh;border-radius:8px;-webkit-overflow-scrolling:touch">
+    <div id="gantt-wrap" style="min-width:1200px"></div>
+  </div>
+</div>
+
+<div id="page-milestone" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="sec" style="margin:0">Milestone</div>
+    <button class="btn bp" id="btn-ms">+ Nuova milestone</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Data</th><th>Descrizione</th><th>Tipo</th><th></th></tr></thead>
+    <tbody id="tbl-ms"></tbody></table>
   </div>
 </div>
 </main>
@@ -229,6 +241,27 @@ tbody td{padding:9px 10px;vertical-align:middle}
   </div>
 </div>
 
+<!-- MODAL MILESTONE -->
+<div class="ov" id="m-ms">
+  <div class="mod" style="max-width:400px">
+    <div class="mh"><h2 id="ms-title">Nuova milestone</h2><button class="mx" id="btn-close-ms">×</button></div>
+    <div class="mb">
+      <input type="hidden" id="ms-id">
+      <div class="fg"><label>Data *</label><input type="date" id="ms-data"></div>
+      <div class="fg"><label>Descrizione *</label><input type="text" id="ms-desc" placeholder="es. Revisione progetto con cliente..."></div>
+      <div class="fg"><label>Tipo</label>
+        <select id="ms-tipo">
+          <option value="interno">🔵 Interno</option>
+          <option value="cliente">🟠 Con cliente</option>
+        </select>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn bg" id="btn-ann-ms">Annulla</button>
+      <button class="btn bp" id="btn-salva-ms">Salva</button>
+    </div>
+  </div>
+</div>
 <!-- MODAL FOLLOW-UP -->
 <div class="ov" id="m-fu">
   <div class="mod">
@@ -260,6 +293,7 @@ const AREA_COLS = ['#2563eb','#16a34a','#d97706','#7c3aed','#dc2626','#0891b2'];
 let S = JSON.parse(localStorage.getItem('miba_state') || 'null') || {
   attivita: [],
   followup: [],
+  milestone: [],
   imp: {
     aree: ['1. Prodotto','2. Industrializzazione','3. Ufficio Tecnico','4. Produzione','5. Supply Chain','6. Pianificazione'],
     responsabili: ['Fabio','Christian','Paolo','Stefano','Mattia','Giuseppe'],
@@ -291,6 +325,7 @@ document.getElementById('nav').addEventListener('click', function(e) {
   if (id === 'followup') rFu();
   if (id === 'imp') rImp();
   if (id === 'gantt') rGantt();
+  if (id === 'milestone') rMs();
 });
 
 // ── CLOUD ─────────────────────────────────────────────────
@@ -508,6 +543,12 @@ document.body.addEventListener('click', function(e) {
   // Delete follow-up
   const df = e.target.closest('.del-fu-btn');
   if (df) { delFu(df.dataset.id); return; }
+  // Edit milestone
+  const em = e.target.closest('.edit-ms');
+  if (em) { openMs(S.milestone.find(m=>m.id===em.dataset.id)); return; }
+  // Del milestone
+  const dm = e.target.closest('.del-ms');
+  if (dm) { delMs(dm.dataset.id); return; }
   // Remove impostazione
   const ri = e.target.closest('.rm-imp');
   if (ri) { rmImp(ri.dataset.key, +ri.dataset.i); return; }
@@ -524,6 +565,10 @@ document.getElementById('btn-ann-fu').onclick = () => document.getElementById('m
 document.getElementById('btn-salva-fu').onclick = saveFu;
 
 document.getElementById('btn-export').onclick = exportExcel;
+document.getElementById('btn-ms').onclick = () => openMs();
+document.getElementById('btn-close-ms').onclick = () => document.getElementById('m-ms').classList.remove('open');
+document.getElementById('btn-ann-ms').onclick = () => document.getElementById('m-ms').classList.remove('open');
+document.getElementById('btn-salva-ms').onclick = saveMs;
 document.getElementById('btn-add-area').onclick = () => addImp('aree','n-area');
 document.getElementById('btn-add-resp').onclick = () => addImp('responsabili','n-resp');
 document.getElementById('btn-sync').onclick = syncCloud;
@@ -614,110 +659,150 @@ function addImp(key,inputId) {
 function rmImp(key,i) { S.imp[key].splice(i,1); rImp(); fillSels(); save(); }
 
 
+
+// ── MILESTONE ─────────────────────────────────────────────
+function rMs() {
+  const ms = (S.milestone||[]).sort((a,b) => a.data.localeCompare(b.data));
+  document.getElementById('tbl-ms').innerHTML = ms.length
+    ? ms.map(m => `<tr>
+        <td style="white-space:nowrap">${fmtD(m.data)}</td>
+        <td>${m.desc}</td>
+        <td><span class="badge" style="background:${m.tipo==='cliente'?'#fff7ed':'#eff6ff'};color:${m.tipo==='cliente'?'#ea580c':'#2563eb'}">${m.tipo==='cliente'?'🟠 Cliente':'🔵 Interno'}</span></td>
+        <td>
+          <button class="btn bg bsm edit-ms" data-id="${m.id}">✏️</button>
+          <button class="btn bd bsm del-ms" data-id="${m.id}">🗑</button>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="4"><div class="empty">Nessuna milestone. Clicca "+ Nuova milestone".</div></td></tr>`;
+}
+
+function openMs(m=null) {
+  document.getElementById('ms-title').textContent = m ? 'Modifica milestone' : 'Nuova milestone';
+  document.getElementById('ms-id').value   = m?.id   || '';
+  document.getElementById('ms-data').value = m?.data  || '';
+  document.getElementById('ms-desc').value = m?.desc  || '';
+  document.getElementById('ms-tipo').value = m?.tipo  || 'interno';
+  document.getElementById('m-ms').classList.add('open');
+}
+
+function saveMs() {
+  const data = document.getElementById('ms-data').value;
+  const desc = document.getElementById('ms-desc').value.trim();
+  if (!data || !desc) { toast('Inserisci data e descrizione','e'); return; }
+  if (!S.milestone) S.milestone = [];
+  const id = document.getElementById('ms-id').value;
+  const obj = { id: id||'MS'+Date.now(), data, desc, tipo: document.getElementById('ms-tipo').value };
+  if (id) { const i = S.milestone.findIndex(m=>m.id===id); if(i>=0) S.milestone[i]=obj; }
+  else S.milestone.push(obj);
+  document.getElementById('m-ms').classList.remove('open');
+  rMs(); save();
+}
+
+function delMs(id) {
+  if (!confirm('Eliminare?')) return;
+  S.milestone = S.milestone.filter(m=>m.id!==id);
+  rMs(); save();
+}
+
 // ── GANTT ─────────────────────────────────────────────────
 function rGantt() {
   const wrap = document.getElementById('gantt-wrap');
-  const att = S.attivita.filter(a => a.ini && a.sca);
+  const att = S.attivita;
 
   if (!att.length) {
-    wrap.innerHTML = '<div class="empty" style="background:#fff;border-radius:8px;padding:36px">📅 Nessuna attività con data inizio e scadenza. Aggiungile nel tab Attività.</div>';
+    wrap.innerHTML = '<div class="empty" style="background:#fff;border-radius:8px;padding:36px">📅 Nessuna attività. Aggiungile nel tab Attività.</div>';
     return;
   }
 
-  // Calcola range date
-  const allDates = att.flatMap(a => [new Date(a.ini), new Date(a.sca)]);
-  // Milestone fisse
-  const milestones = [
-    {label:'Follow-up #1', date: new Date('2026-08-06')},
-    {label:'Scadenza', date: new Date('2026-09-14')},
-  ];
-  milestones.forEach(m => allDates.push(m.date));
-
-  let minD = new Date(Math.min(...allDates));
-  let maxD = new Date(Math.max(...allDates));
-  // Arrotonda a lunedì / domenica
-  minD.setDate(minD.getDate() - minD.getDay() + 1);
-  maxD.setDate(maxD.getDate() + (7 - maxD.getDay()));
-
-  // Settimane
-  const weeks = [];
-  let d = new Date(minD);
-  while (d <= maxD) {
-    weeks.push(new Date(d));
-    d.setDate(d.getDate() + 7);
-  }
-
+  // Finestra fissa: oggi - 1 settimana → oggi + 7 settimane (~ 2 mesi)
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const minD = new Date(today); minD.setDate(today.getDate() - 7);
+  const maxD = new Date(today); maxD.setDate(today.getDate() + 49); // 7 settimane avanti
   const totalDays = (maxD - minD) / 86400000;
-  const pct = (date) => Math.max(0, Math.min(100, (new Date(date) - minD) / 86400000 / totalDays * 100));
-  const width = (s, e) => Math.max(0.5, (new Date(e) - new Date(s)) / 86400000 / totalDays * 100);
 
-  const barColor = (stato) => {
-    if (!stato) return '#94a3b8';
-    if (stato.includes('Completato')) return '#16a34a';
-    if (stato.includes('ritardo')) return '#dc2626';
-    if (stato.includes('corso')) return '#2563eb';
+  const pct  = d => { const dt = d instanceof Date ? d : new Date(d); return Math.max(0, Math.min(100, (dt - minD) / 86400000 / totalDays * 100)); };
+  const wPct = (s, e) => Math.max(0.5, Math.min(100 - pct(s), (new Date(e) - new Date(s)) / 86400000 / totalDays * 100));
+  const fmtW = d => d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
+  const fmtS = d => { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); } catch { return ''; } };
+
+  const barColor = s => {
+    if (!s) return '#94a3b8';
+    if (s.includes('Completato')) return '#16a34a';
+    if (s.includes('ritardo'))    return '#dc2626';
+    if (s.includes('corso'))      return '#2563eb';
     return '#94a3b8';
   };
 
-  const fmtW = (d) => d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
-  const fmtShort = (d) => { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); } catch { return ''; } };
+  // Settimane header
+  const weeks = [];
+  let wd = new Date(minD);
+  while (wd <= maxD) { weeks.push(new Date(wd)); wd.setDate(wd.getDate()+7); }
 
-  // Header settimane
-  let hdr = '<div style="display:flex;margin-left:220px;min-width:600px">';
-  weeks.forEach(w => {
-    hdr += `<div style="flex:1;font-size:9px;color:#94a3b8;text-align:center;padding:2px 0;border-left:1px solid #f1f5f9;white-space:nowrap">${fmtW(w)}</div>`;
-  });
-  hdr += '</div>';
+  const hdr = weeks.map(w =>
+    `<div style="flex:1;font-size:9px;color:#94a3b8;text-align:center;padding:2px 0;border-left:1px solid rgba(255,255,255,0.15);white-space:nowrap">${fmtW(w)}</div>`
+  ).join('');
 
   // Righe attività
-  let rows = '';
-  att.forEach(a => {
-    const col = barColor(a.stato);
-    const left = pct(a.ini);
-    const w = width(a.ini, a.sca);
-    const avz = +a.avz || 0;
-    rows += `<div style="display:flex;align-items:center;border-bottom:1px solid #f1f5f9;min-width:820px">
-      <div style="width:220px;min-width:220px;padding:7px 10px;font-size:11px;overflow:hidden">
+  const rows = att.map(a => {
+    const iniD = a.ini || today.toISOString().split('T')[0];
+    const scaD = a.sca || new Date(today.getTime()+30*86400000).toISOString().split('T')[0];
+    const col  = barColor(a.stato);
+    const left = pct(iniD);
+    const w    = wPct(iniD, scaD);
+    const avz  = Math.min(100, +a.avz || 0);
+    return `<div style="display:flex;align-items:center;border-bottom:1px solid #f1f5f9">
+      <div style="width:200px;min-width:200px;padding:7px 10px;font-size:11px;border-right:1px solid #e2e8f0">
         <div style="font-weight:600;color:#1a2744;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.nome}">${a.nome}</div>
         <div style="font-size:10px;color:#94a3b8">${[a.r1,a.r2].filter(Boolean).join(', ')||'—'}</div>
       </div>
-      <div style="flex:1;position:relative;height:36px;background:#f8fafc">
-        <div style="position:absolute;left:${left}%;width:${w}%;top:8px;height:20px;background:${col};border-radius:4px;opacity:0.85;min-width:4px"></div>
-        <div style="position:absolute;left:${left}%;width:${w * avz / 100}%;top:8px;height:20px;background:${col};border-radius:4px;min-width:0;opacity:1"></div>
-        <div style="position:absolute;left:${left}%;top:10px;font-size:9px;color:#fff;padding:0 4px;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.4)">${fmtShort(a.ini)} → ${fmtShort(a.sca)}</div>
+      <div style="flex:1;position:relative;height:38px;background:#f8fafc">
+        <div style="position:absolute;left:${left}%;width:${w}%;top:9px;height:20px;background:${col};border-radius:4px;opacity:0.3;min-width:4px"></div>
+        <div style="position:absolute;left:${left}%;width:${w*avz/100}%;top:9px;height:20px;background:${col};border-radius:4px;min-width:0"></div>
+        <div style="position:absolute;left:calc(${left}% + 4px);top:11px;font-size:9px;color:#1a2744;white-space:nowrap;pointer-events:none;font-weight:600">${fmtS(iniD)} → ${fmtS(scaD)} ${avz>0?'('+avz+'%)':''}</div>
       </div>
     </div>`;
-  });
+  }).join('');
 
-  // Milestone
-  let msRows = '';
-  milestones.forEach(m => {
-    const left = pct(m.date);
-    msRows += `<div style="display:flex;align-items:center;border-bottom:1px solid #fef3c7;background:#fffbeb;min-width:820px">
-      <div style="width:220px;min-width:220px;padding:6px 10px;font-size:11px;font-weight:700;color:#d97706">⭐ ${m.label}</div>
-      <div style="flex:1;position:relative;height:30px">
-        <div style="position:absolute;left:${left}%;top:4px;width:2px;height:22px;background:#fbbf24"></div>
-        <div style="position:absolute;left:calc(${left}% + 4px);top:8px;font-size:10px;color:#d97706;white-space:nowrap">${m.date.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})}</div>
+  // Milestone dai follow-up reali
+  // Milestone con rombo ◆ e follow-up con stella ★ sul Gantt
+  const msRows = [
+    ...(S.milestone||[]).map(m => ({...m, _tipo: 'milestone'})),
+    ...(S.followup||[]).filter(f => f.data).map(f => ({id:f.id, data:f.data, desc:'Follow-up '+( f.num||''), tipo:'followup', _tipo:'followup'}))
+  ].sort((a,b)=>a.data.localeCompare(b.data)).map(item => {
+    const itemDate = new Date(item.data); itemDate.setHours(0,0,0,0);
+    const left = pct(itemDate);
+    if (left < 0 || left > 100) return '';
+    const isFollowup = item._tipo === 'followup';
+    const isCliente = item.tipo === 'cliente';
+    const col  = isFollowup ? '#7c3aed' : (isCliente ? '#ea580c' : '#2563eb');
+    const line = isFollowup ? '#a78bfa' : (isCliente ? '#fb923c' : '#60a5fa');
+    const bg   = isFollowup ? '#f5f3ff' : (isCliente ? '#fff7ed' : '#eff6ff');
+    const icon = isFollowup ? '★' : '◆';
+    const label = isFollowup ? item.desc : item.desc;
+    return \`<div style="display:flex;align-items:center;border-bottom:1px solid \${bg};background:\${bg}">
+      <div style="width:200px;min-width:200px;padding:5px 10px;font-size:10px;font-weight:700;color:\${col};border-right:1px solid #e2e8f0">\${icon} \${label}</div>
+      <div style="flex:1;position:relative;height:26px">
+        <div style="position:absolute;left:calc(\${left}% - 7px);top:3px;width:14px;height:14px;background:\${col};transform:rotate(45deg);border-radius:2px;opacity:0.9"></div>
+        <div style="position:absolute;left:calc(\${left}% + 10px);top:5px;font-size:9px;color:\${col};font-weight:700;white-space:nowrap">\${fmtS(item.data)}</div>
       </div>
-    </div>`;
-  });
+    </div>\`;
+  }).join('');
 
   // Linea oggi
-  const todayPct = pct(new Date());
+  const todayPct = pct(today);
 
   wrap.innerHTML = `
-    <div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
-      <div style="background:#1a2744;display:flex;min-width:820px">
-        <div style="width:220px;min-width:220px;padding:9px 10px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.4px">Attività / Risorsa</div>
-        <div style="flex:1;padding:9px 0;position:relative">
-          ${hdr.replace('<div style="display:flex;margin-left:220px;min-width:600px">','<div style="display:flex">')}
-        </div>
+    <div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);min-width:800px">
+      <div style="background:#1a2744;display:flex;position:sticky;top:0;z-index:10">
+        <div style="width:200px;min-width:200px;padding:9px 10px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,0.15)">Attività / Risorsa</div>
+        <div style="flex:1;display:flex;padding:9px 0">${hdr}</div>
       </div>
       <div style="position:relative">
         ${rows}
         ${msRows}
-        <div style="position:absolute;top:0;bottom:0;left:calc(220px + ${todayPct}%);width:2px;background:rgba(239,68,68,0.6);pointer-events:none;z-index:10">
-          <div style="position:absolute;top:0;left:4px;font-size:9px;color:#dc2626;white-space:nowrap;font-weight:700">oggi</div>
+        <div style="position:absolute;top:0;bottom:0;left:calc(200px + ${todayPct * (1 - 200/800)}%);width:2px;background:rgba(239,68,68,0.7);pointer-events:none;z-index:5">
+          <div style="position:absolute;top:2px;left:4px;font-size:9px;color:#dc2626;font-weight:700;background:#fff;padding:1px 3px;border-radius:3px">oggi</div>
         </div>
       </div>
     </div>`;
