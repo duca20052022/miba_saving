@@ -157,11 +157,11 @@
 </header>
 
 <nav>
-  <button class="active" onclick="showPage('dashboard')">📊 Dashboard</button>
-  <button onclick="showPage('attivita')">📋 Attività</button>
-  <button onclick="showPage('risorse')">👥 Risorse</button>
-  <button onclick="showPage('followup')">📅 Follow-Up</button>
-  <button onclick="showPage('impostazioni')">⚙️ Impostazioni</button>
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('attivita',this)">📋 Attività</button>
+  <button onclick="showPage('risorse',this)">👥 Risorse</button>
+  <button onclick="showPage('followup',this)">📅 Follow-Up</button>
+  <button onclick="showPage('impostazioni',this)">⚙️ Impostazioni</button>
 </nav>
 
 <main>
@@ -508,11 +508,11 @@ function updateSyncBadge(text, cls) {
 // ═══════════════════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════════════════
-function showPage(id) {
+function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  event.target.classList.add('active');
+  if (btn) btn.classList.add('active');
   if (id === 'dashboard') renderDashboard();
   if (id === 'attivita') renderAttivita();
   if (id === 'risorse') renderRisorse();
