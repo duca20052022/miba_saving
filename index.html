@@ -109,7 +109,7 @@ tbody td{padding:9px 10px;vertical-align:middle}
       <button class="btn bp" id="btn-nuova">+ Nuova attività</button>
       <button class="btn bg" id="btn-export">⬇ Esporta Excel</button>
     </div>
-    <table><thead><tr><th>Area</th><th>Attività</th><th>Risorse</th><th>Stato</th><th>Avanz.</th><th>Scadenza</th><th>Saving</th><th></th></tr></thead>
+    <table><thead><tr><th>Area</th><th>Attività</th><th>Risorse</th><th>Stato</th><th>Avanz.</th><th>Scadenza</th><th>Saving</th><th>Note</th><th></th></tr></thead>
     <tbody id="tbl-att"></tbody></table>
   </div>
 </div>
@@ -429,6 +429,7 @@ function rAtt() {
           <td><div class="pb"><div class="pf ${pct===100?'done':''}" style="width:${pct}%"></div></div>${pct}%</td>
           <td>${a.sca?fmtD(a.sca):'—'}</td>
           <td>${a.sav?'€'+(+a.sav).toLocaleString('it-IT'):'—'}</td>
+          <td style="max-width:200px;color:#475569">${a.note ? `<span title="${a.note}" style="cursor:help;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.note}</span>` : '—'}</td>
           <td>
             <button class="btn bg bsm edit-btn" data-id="${a.id}">✏️</button>
             <button class="btn bd bsm del-btn" data-id="${a.id}">🗑</button>
