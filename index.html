@@ -85,6 +85,7 @@ tbody td{padding:9px 10px;vertical-align:middle}
   <button data-page="attivita">📋 Attività</button>
   <button data-page="risorse">👥 Risorse</button>
   <button data-page="followup">📅 Follow-Up</button>
+  <button data-page="gantt">📅 Gantt</button>
   <button data-page="imp">⚙️ Impostazioni</button>
 </nav>
 
@@ -106,6 +107,7 @@ tbody td{padding:9px 10px;vertical-align:middle}
       <select id="f-stato"><option value="">Tutti gli stati</option></select>
       <select id="f-ris"><option value="">Tutte le risorse</option></select>
       <button class="btn bp" id="btn-nuova">+ Nuova attività</button>
+      <button class="btn bg" id="btn-export">⬇ Esporta Excel</button>
     </div>
     <table><thead><tr><th>Area</th><th>Attività</th><th>Risorse</th><th>Stato</th><th>Avanz.</th><th>Scadenza</th><th>Saving</th><th></th></tr></thead>
     <tbody id="tbl-att"></tbody></table>
@@ -165,6 +167,22 @@ tbody td{padding:9px 10px;vertical-align:middle}
   </div>
 </div>
 
+
+<div id="page-gantt" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="sec" style="margin:0">Gantt – Roadmap attività</div>
+    <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:#475569">
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#16a34a;vertical-align:middle"></span>Completato
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#2563eb;vertical-align:middle"></span>In corso
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#dc2626;vertical-align:middle"></span>In ritardo
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#94a3b8;vertical-align:middle"></span>Non avviato
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#fbbf24;vertical-align:middle"></span>Milestone
+    </div>
+  </div>
+  <div style="overflow-x:auto">
+    <div id="gantt-wrap"></div>
+  </div>
+</div>
 </main>
 
 <!-- MODAL ATTIVITÀ -->
@@ -272,6 +290,7 @@ document.getElementById('nav').addEventListener('click', function(e) {
   if (id === 'risorse') rRis();
   if (id === 'followup') rFu();
   if (id === 'imp') rImp();
+  if (id === 'gantt') rGantt();
 });
 
 // ── CLOUD ─────────────────────────────────────────────────
@@ -503,6 +522,7 @@ document.getElementById('btn-close-fu').onclick = () => document.getElementById(
 document.getElementById('btn-ann-fu').onclick = () => document.getElementById('m-fu').classList.remove('open');
 document.getElementById('btn-salva-fu').onclick = saveFu;
 
+document.getElementById('btn-export').onclick = exportExcel;
 document.getElementById('btn-add-area').onclick = () => addImp('aree','n-area');
 document.getElementById('btn-add-resp').onclick = () => addImp('responsabili','n-resp');
 document.getElementById('btn-sync').onclick = syncCloud;
@@ -592,9 +612,231 @@ function addImp(key,inputId) {
 }
 function rmImp(key,i) { S.imp[key].splice(i,1); rImp(); fillSels(); save(); }
 
+
+// ── GANTT ─────────────────────────────────────────────────
+function rGantt() {
+  const wrap = document.getElementById('gantt-wrap');
+  const att = S.attivita.filter(a => a.ini && a.sca);
+
+  if (!att.length) {
+    wrap.innerHTML = '<div class="empty" style="background:#fff;border-radius:8px;padding:36px">📅 Nessuna attività con data inizio e scadenza. Aggiungile nel tab Attività.</div>';
+    return;
+  }
+
+  // Calcola range date
+  const allDates = att.flatMap(a => [new Date(a.ini), new Date(a.sca)]);
+  // Milestone fisse
+  const milestones = [
+    {label:'Follow-up #1', date: new Date('2026-08-06')},
+    {label:'Scadenza', date: new Date('2026-09-14')},
+  ];
+  milestones.forEach(m => allDates.push(m.date));
+
+  let minD = new Date(Math.min(...allDates));
+  let maxD = new Date(Math.max(...allDates));
+  // Arrotonda a lunedì / domenica
+  minD.setDate(minD.getDate() - minD.getDay() + 1);
+  maxD.setDate(maxD.getDate() + (7 - maxD.getDay()));
+
+  // Settimane
+  const weeks = [];
+  let d = new Date(minD);
+  while (d <= maxD) {
+    weeks.push(new Date(d));
+    d.setDate(d.getDate() + 7);
+  }
+
+  const totalDays = (maxD - minD) / 86400000;
+  const pct = (date) => Math.max(0, Math.min(100, (new Date(date) - minD) / 86400000 / totalDays * 100));
+  const width = (s, e) => Math.max(0.5, (new Date(e) - new Date(s)) / 86400000 / totalDays * 100);
+
+  const barColor = (stato) => {
+    if (!stato) return '#94a3b8';
+    if (stato.includes('Completato')) return '#16a34a';
+    if (stato.includes('ritardo')) return '#dc2626';
+    if (stato.includes('corso')) return '#2563eb';
+    return '#94a3b8';
+  };
+
+  const fmtW = (d) => d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
+  const fmtShort = (d) => { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); } catch { return ''; } };
+
+  // Header settimane
+  let hdr = '<div style="display:flex;margin-left:220px;min-width:600px">';
+  weeks.forEach(w => {
+    hdr += `<div style="flex:1;font-size:9px;color:#94a3b8;text-align:center;padding:2px 0;border-left:1px solid #f1f5f9;white-space:nowrap">${fmtW(w)}</div>`;
+  });
+  hdr += '</div>';
+
+  // Righe attività
+  let rows = '';
+  att.forEach(a => {
+    const col = barColor(a.stato);
+    const left = pct(a.ini);
+    const w = width(a.ini, a.sca);
+    const avz = +a.avz || 0;
+    rows += `<div style="display:flex;align-items:center;border-bottom:1px solid #f1f5f9;min-width:820px">
+      <div style="width:220px;min-width:220px;padding:7px 10px;font-size:11px;overflow:hidden">
+        <div style="font-weight:600;color:#1a2744;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.nome}">${a.nome}</div>
+        <div style="font-size:10px;color:#94a3b8">${[a.r1,a.r2].filter(Boolean).join(', ')||'—'}</div>
+      </div>
+      <div style="flex:1;position:relative;height:36px;background:#f8fafc">
+        <div style="position:absolute;left:${left}%;width:${w}%;top:8px;height:20px;background:${col};border-radius:4px;opacity:0.85;min-width:4px"></div>
+        <div style="position:absolute;left:${left}%;width:${w * avz / 100}%;top:8px;height:20px;background:${col};border-radius:4px;min-width:0;opacity:1"></div>
+        <div style="position:absolute;left:${left}%;top:10px;font-size:9px;color:#fff;padding:0 4px;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.4)">${fmtShort(a.ini)} → ${fmtShort(a.sca)}</div>
+      </div>
+    </div>`;
+  });
+
+  // Milestone
+  let msRows = '';
+  milestones.forEach(m => {
+    const left = pct(m.date);
+    msRows += `<div style="display:flex;align-items:center;border-bottom:1px solid #fef3c7;background:#fffbeb;min-width:820px">
+      <div style="width:220px;min-width:220px;padding:6px 10px;font-size:11px;font-weight:700;color:#d97706">⭐ ${m.label}</div>
+      <div style="flex:1;position:relative;height:30px">
+        <div style="position:absolute;left:${left}%;top:4px;width:2px;height:22px;background:#fbbf24"></div>
+        <div style="position:absolute;left:calc(${left}% + 4px);top:8px;font-size:10px;color:#d97706;white-space:nowrap">${m.date.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})}</div>
+      </div>
+    </div>`;
+  });
+
+  // Linea oggi
+  const todayPct = pct(new Date());
+
+  wrap.innerHTML = `
+    <div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+      <div style="background:#1a2744;display:flex;min-width:820px">
+        <div style="width:220px;min-width:220px;padding:9px 10px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.4px">Attività / Risorsa</div>
+        <div style="flex:1;padding:9px 0;position:relative">
+          ${hdr.replace('<div style="display:flex;margin-left:220px;min-width:600px">','<div style="display:flex">')}
+        </div>
+      </div>
+      <div style="position:relative">
+        ${rows}
+        ${msRows}
+        <div style="position:absolute;top:0;bottom:0;left:calc(220px + ${todayPct}%);width:2px;background:rgba(239,68,68,0.6);pointer-events:none;z-index:10">
+          <div style="position:absolute;top:0;left:4px;font-size:9px;color:#dc2626;white-space:nowrap;font-weight:700">oggi</div>
+        </div>
+      </div>
+    </div>`;
+}
+
 // ── UTILS ─────────────────────────────────────────────────
 function fmtD(d) { try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}); } catch { return d||'—'; } }
 function toast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='show '+type; setTimeout(()=>t.className='',3000); }
+
+
+// ── EXPORT EXCEL ──────────────────────────────────────────
+function exportExcel() {
+  const now = new Date().toLocaleDateString('it-IT');
+
+  // ── Foglio 1: Attività
+  const attHeaders = ['ID','Area','Tema','Attività','Risorsa 1','Risorsa 2','Ore Prev R1','Ore Cons R1','Ore Prev R2','Ore Cons R2','Stato','Priorità','Data Inizio','Scadenza','Saving (€)','% Avanzamento','Note'];
+  const attRows = S.attivita.map(a => [
+    a.id, a.area||'', a.tema||'', a.nome||'',
+    a.r1||'', a.r2||'',
+    a.op1||0, a.oc1||0, a.op2||0, a.oc2||0,
+    a.stato||'', a.prio||'',
+    a.ini||'', a.sca||'',
+    a.sav||0, a.avz||0, a.note||''
+  ]);
+
+  // ── Foglio 2: Risorse
+  const risHeaders = ['Risorsa','Attività Totali','Completate','In Corso','In Ritardo','Ore Previste','Ore Consuntivate','Delta Ore'];
+  const risRows = S.imp.responsabili.map(r => {
+    const mine = S.attivita.filter(a => a.r1===r || a.r2===r);
+    const op = mine.reduce((s,a) => s+(a.r1===r?(+a.op1||0):0)+(a.r2===r?(+a.op2||0):0), 0);
+    const oc = mine.reduce((s,a) => s+(a.r1===r?(+a.oc1||0):0)+(a.r2===r?(+a.oc2||0):0), 0);
+    return [r, mine.length,
+      mine.filter(a=>a.stato==='🟢 Completato').length,
+      mine.filter(a=>a.stato==='🟡 In corso').length,
+      mine.filter(a=>a.stato==='🔴 In ritardo').length,
+      op.toFixed(1), oc.toFixed(1), (oc-op).toFixed(1)];
+  }).filter(r => r[1] > 0);
+
+  // ── Foglio 3: Follow-Up
+  const fuHeaders = ['N°','Data','Partecipanti','Decisioni','Azioni','Rischi','Prossimo Follow-Up'];
+  const fuRows = (S.followup||[]).map(f => [
+    f.num||'', f.data||'', f.part||'',
+    f.dec||'', f.az||'', f.ris||'', f.pros||''
+  ]);
+
+  // ── Foglio 4: Dashboard KPI
+  const tot = S.attivita.length;
+  const done = S.attivita.filter(a=>a.stato==='🟢 Completato').length;
+  const rit = S.attivita.filter(a=>a.stato==='🔴 In ritardo').length;
+  const sav = S.attivita.reduce((s,a)=>s+(+a.sav||0),0);
+  const kpiHeaders = ['KPI','Valore'];
+  const kpiRows = [
+    ['Totale attività', tot],
+    ['Completate', done],
+    ['In ritardo', rit],
+    ['% completamento', tot ? Math.round(done/tot*100)+'%' : '0%'],
+    ['Saving atteso (€)', sav],
+    ['Data estrazione', now],
+  ];
+
+  // ── Genera XML Excel (formato SpreadsheetML)
+  const esc = v => String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  const makeSheet = (name, headers, rows) => {
+    let xml = `<Worksheet ss:Name="${esc(name)}"><Table>`;
+    // Header row
+    xml += '<Row>';
+    headers.forEach(h => {
+      xml += `<Cell ss:StyleID="header"><Data ss:Type="String">${esc(h)}</Data></Cell>`;
+    });
+    xml += '</Row>';
+    // Data rows
+    rows.forEach((row, ri) => {
+      xml += `<Row ss:StyleID="${ri%2===0?'even':'odd'}">`;
+      row.forEach(v => {
+        const isNum = typeof v === 'number' || (!isNaN(v) && v !== '' && !String(v).includes('%') && !String(v).includes('/'));
+        xml += `<Cell><Data ss:Type="${isNum?'Number':'String'}">${esc(v)}</Data></Cell>`;
+      });
+      xml += '</Row>';
+    });
+    xml += '</Table></Worksheet>';
+    return xml;
+  };
+
+  const workbook = `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:x="urn:schemas-microsoft-com:office:excel">
+  <Styles>
+    <Style ss:ID="header">
+      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="10"/>
+      <Interior ss:Color="#1A2744" ss:Pattern="Solid"/>
+      <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+      <Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/></Borders>
+    </Style>
+    <Style ss:ID="even">
+      <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>
+      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+    </Style>
+    <Style ss:ID="odd">
+      <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+    </Style>
+  </Styles>
+  ${makeSheet('Attività', attHeaders, attRows)}
+  ${makeSheet('Risorse', risHeaders, risRows)}
+  ${makeSheet('Follow-Up', fuHeaders, fuRows)}
+  ${makeSheet('Dashboard KPI', kpiHeaders, kpiRows)}
+</Workbook>`;
+
+  const blob = new Blob([workbook], {type:'application/vnd.ms-excel;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `MIBA_Saving_${now.replace(/\//g,'-')}.xls`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Export completato ✓','s');
+}
 
 // ── INIT ──────────────────────────────────────────────────
 rDash();
