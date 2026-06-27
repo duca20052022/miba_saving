@@ -244,8 +244,8 @@ let S = JSON.parse(localStorage.getItem('miba_state') || 'null') || {
 };
 
 let cfg = {
-  key: localStorage.getItem('miba_key') || '',
-  bin: localStorage.getItem('miba_bin') || ''
+  key: localStorage.getItem('miba_key') || '$2a$10$Fx64kZOa018OP5JjNZZVWubS7mBGv1rO4zns8HbpjNFRxcneZRM4i',
+  bin: localStorage.getItem('miba_bin') || '6a3f87dada38895dfe068237'
 };
 
 function persist() {
@@ -593,7 +593,13 @@ function toast(msg,type='') { const t=document.getElementById('toast'); t.textCo
 // ── INIT ──────────────────────────────────────────────────
 rDash();
 fillSels();
-if (cfg.key && cfg.bin) setSy('✓ Cloud attivo');
+if (cfg.key && cfg.bin) {
+  setSy('Connessione...');
+  fetch('https://api.jsonbin.io/v3/b/' + cfg.bin + '/latest', {headers:{'X-Master-Key':cfg.key}})
+    .then(r => r.json())
+    .then(d => { S = {...S, ...d.record}; persist(); setSy('✓ Cloud attivo'); rAll(); })
+    .catch(() => setSy('● Locale'));
+}
 </script>
 </body>
 </html>
