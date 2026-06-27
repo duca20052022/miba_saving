@@ -151,11 +151,17 @@ tbody td{padding:9px 10px;vertical-align:middle}
     </div>
   </div>
   <div class="ic" style="margin-top:12px">
-    <div class="sec" style="margin-top:0">☁️ Connessione cloud (opzionale)</div>
-    <div class="fg" style="margin-bottom:10px"><label>JSONBin API Key</label><input type="password" id="cfg-key" placeholder="$2a$..."></div>
-    <div class="fg" style="margin-bottom:10px"><label>Bin ID</label><input type="text" id="cfg-bin" placeholder="lascia vuoto per crearne uno nuovo"></div>
-    <button class="btn bp" id="btn-sync">Connetti al cloud</button>
-    <p style="font-size:10px;color:#94a3b8;margin-top:6px">Senza cloud i dati restano nel tuo browser. Con il cloud tutti condividono gli stessi dati.</p>
+    <div class="sec" style="margin-top:0">☁️ Connessione cloud</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+      <span style="font-size:20px">✅</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#16a34a">Cloud attivo</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">Dati sincronizzati automaticamente tra tutti i membri del team.</div>
+      </div>
+    </div>
+    <input type="hidden" id="cfg-key">
+    <input type="hidden" id="cfg-bin">
+    <button style="display:none" id="btn-sync"></button>
   </div>
 </div>
 
